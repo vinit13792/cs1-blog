@@ -1,0 +1,9 @@
+tensorflow==2.5.0
+streamlit
+pandas
+numpy
+scikit-learn==0.22.2.post1
+prettytable
+xgboost==0.90
+googledrivedownloader
+nltk==3.2.5
