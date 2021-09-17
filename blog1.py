@@ -18,6 +18,10 @@ gdd.download_file_from_google_drive(file_id='13VXNiG3d98apB7L8f3luF-L4wyF3mxxx',
                                     dest_path='/app/cs1-blog/text_corpus.csv',
                                     unzip=False)
 
+
+gdd.download_file_from_google_drive(file_id='16xqcoh3Tf4FOTEQdzVqqOI6izf-QWr8R',
+                                    dest_path='/app/cs1-blog/download.png',
+                                    unzip=False)
 df = pd.read_csv('text_corpus.csv')
 
 st.title('Multi-class Sentiment Classification of customer text in Customer Support')
@@ -50,6 +54,8 @@ st.markdown("* In the multi-class and multi-label case, this is the weighted ave
 st.markdown("* Micro f1 score: Calculate metrics globally by counting the total true positives, false negatives and false positives. This is a better metric when we have class imbalance.")
 st.markdown("* Macro f1 score: Calculate metrics for each label, and find their unweighted mean. This does not take label imbalance into account.")
 st.markdown("2. Hamming loss: The Hamming loss is the fraction of labels that are incorrectly predicted.")
+st.image('download.png')
+
 
 import string
 import re
