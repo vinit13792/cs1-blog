@@ -75,16 +75,15 @@ def decontracted(phrase):
 for i in range(df.shape[0]):
   df.at[i, 'Text'] = decontracted(df['Text'].values[i])
   
- def Find(string):
-  
-    # findall() has been used 
-    # with valid conditions for urls in string
-    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
-    url = re.findall(regex,string) 
-    temp = ''
-    for x in url:
-      temp+=''.join(x[0])
-    return temp
+def Find(string):
+  # findall() has been used 
+  # with valid conditions for urls in string
+  regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+  url = re.findall(regex,string) 
+  temp = ''
+  for x in url:
+    temp+=''.join(x[0])
+  return temp
   
  
  def clean_text(df, feature):
