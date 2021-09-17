@@ -1,7 +1,9 @@
 import streamlit as st
 import numpy as np
 import matplotlib.pyplot as plt
+import pandas as pd
 import nltk
+from google_drive_downloader import GoogleDriveDownloader as gdd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import confusion_matrix
@@ -10,6 +12,13 @@ from sklearn.metrics import roc_curve, auc
 import joblib
 import os
 import pickle
+
+
+gdd.download_file_from_google_drive(file_id='13VXNiG3d98apB7L8f3luF-L4wyF3mxxx',
+                                    dest_path='/app/cs1-blog/text_corpus.csv',
+                                    unzip=False)
+
+df = pd.read_csv('text_corpus.csv')
 
 st.title('Multi-class Sentiment Classification of customer text in Customer Support')
 st.header('Overview:')
@@ -41,3 +50,80 @@ st.markdown("* In the multi-class and multi-label case, this is the weighted ave
 st.markdown("* Micro f1 score: Calculate metrics globally by counting the total true positives, false negatives and false positives. This is a better metric when we have class imbalance.")
 st.markdown("* Macro f1 score: Calculate metrics for each label, and find their unweighted mean. This does not take label imbalance into account.")
 st.markdown("2. Hamming loss: The Hamming loss is the fraction of labels that are incorrectly predicted.")
+
+import string
+import re
+from collections import Counter
+from collections import defaultdict
+
+def decontracted(phrase):
+    # specific
+    phrase = re.sub(r"won't", "will not", phrase)
+    phrase = re.sub(r"can\'t", "can not", phrase)
+
+    # general
+    phrase = re.sub(r"n\'t", " not", phrase)
+    phrase = re.sub(r"\'re", " are", phrase)
+    phrase = re.sub(r"\'s", " is", phrase)
+    phrase = re.sub(r"\'d", " would", phrase)
+    phrase = re.sub(r"\'ll", " will", phrase)
+    phrase = re.sub(r"\'t", " not", phrase)
+    phrase = re.sub(r"\'ve", " have", phrase)
+    phrase = re.sub(r"\'m", " am", phrase)
+    return phrase
+  
+for i in range(df.shape[0]):
+  df.at[i, 'Text'] = decontracted(df['Text'].values[i])
+  
+ def Find(string):
+  
+    # findall() has been used 
+    # with valid conditions for urls in string
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    url = re.findall(regex,string) 
+    temp = ''
+    for x in url:
+      temp+=''.join(x[0])
+    return temp
+  
+ 
+ def clean_text(df, feature):
+    
+    cleaned_text = []
+    
+    for i in tqdm(range(df.shape[0])):
+        
+        doc = df[feature].values[i]
+        
+        url = Find(doc)
+        
+        doc = re.sub(url, '', doc)
+        
+        doc = re.findall(r'\w+', doc)
+        
+        table = str.maketrans('', '', string.punctuation)
+        
+        stripped = [w.translate(table) for w in doc]
+        
+        doc = ' '.join(stripped)
+        
+        doc = doc.lower()
+
+        # remove text followed by numbers
+        doc = re.sub('[^A-Za-z0-9]+', ' ', doc)
+
+        # remove text which appears inside < > or text preceeding or suceeding <, >
+        doc = re.sub(r'< >|<.*?>|<>|\>|\<', ' ', doc)
+
+        # remove anything inside brackets
+        doc = re.sub(r'\(.*?\)', ' ', doc)
+        
+        # remove digits
+        doc = re.sub(r'\d+', ' ', doc)
+        cleaned_text.append(doc)
+        
+    return cleaned_text
+  
+df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
+
+st.dataframe(df.head())
