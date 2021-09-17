@@ -86,42 +86,41 @@ def Find(string):
   return temp
   
  
- def clean_text(df, feature):
+def clean_text(df, feature):
+  cleaned_text = []
     
-    cleaned_text = []
+  for i in tqdm(range(df.shape[0])):
     
-    for i in tqdm(range(df.shape[0])):
+    doc = df[feature].values[i]
         
-        doc = df[feature].values[i]
+    url = Find(doc)
         
-        url = Find(doc)
+    doc = re.sub(url, '', doc)
         
-        doc = re.sub(url, '', doc)
+    doc = re.findall(r'\w+', doc)
         
-        doc = re.findall(r'\w+', doc)
+    table = str.maketrans('', '', string.punctuation)
         
-        table = str.maketrans('', '', string.punctuation)
+    stripped = [w.translate(table) for w in doc]
         
-        stripped = [w.translate(table) for w in doc]
+    doc = ' '.join(stripped)
         
-        doc = ' '.join(stripped)
-        
-        doc = doc.lower()
+    doc = doc.lower()
 
-        # remove text followed by numbers
-        doc = re.sub('[^A-Za-z0-9]+', ' ', doc)
+    # remove text followed by numbers
+    doc = re.sub('[^A-Za-z0-9]+', ' ', doc)
 
-        # remove text which appears inside < > or text preceeding or suceeding <, >
-        doc = re.sub(r'< >|<.*?>|<>|\>|\<', ' ', doc)
+    # remove text which appears inside < > or text preceeding or suceeding <, >
+    doc = re.sub(r'< >|<.*?>|<>|\>|\<', ' ', doc)
 
-        # remove anything inside brackets
-        doc = re.sub(r'\(.*?\)', ' ', doc)
+    # remove anything inside brackets
+    doc = re.sub(r'\(.*?\)', ' ', doc)
         
-        # remove digits
-        doc = re.sub(r'\d+', ' ', doc)
-        cleaned_text.append(doc)
+    # remove digits
+    doc = re.sub(r'\d+', ' ', doc)
+    cleaned_text.append(doc)
         
-    return cleaned_text
+  return cleaned_text
   
 df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
 
