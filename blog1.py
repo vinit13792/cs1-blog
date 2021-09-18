@@ -37,7 +37,7 @@ gdd.download_file_from_google_drive(file_id='14dMuT_7VHMDejyB_DckEIIad4_JxwQyn',
 
 
 gdd.download_file_from_google_drive(file_id='1GydE6I9rfqgdBHrsYUi0b3J73V_t2f-O',
-                                    dest_path='/app/cs1-blog/auc.png',
+                                    dest_path='/app/cs1-blog/ai.jpg',
                                     unzip=False)
 
 df = pd.read_csv('text_corpus.csv')
