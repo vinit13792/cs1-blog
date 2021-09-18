@@ -157,4 +157,6 @@ def clean_text(df, feature):
   
 df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
 
+st.write('\n\n')
+st.header('Dataset Preview')
 st.dataframe(df.head())
