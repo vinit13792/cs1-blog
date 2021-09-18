@@ -41,10 +41,13 @@ gdd.download_file_from_google_drive(file_id='1GydE6I9rfqgdBHrsYUi0b3J73V_t2f-O',
                                     unzip=False)
 
 df = pd.read_csv('text_corpus.csv')
+
+st.title('Multi-class Sentiment Classification of customer text in Customer Support')
+st.write('\n')
 st.image('ai.jpg')
 st.markdown("""“We have seen AI providing conversation and comfort to the lonely; we have also seen AI engaging in racial discrimination. Yet the biggest harm that AI is likely to do to individuals in the short term is job displacement, as the amount of work we can automate with AI is vastly larger than before. As leaders, it is incumbent on all of us to make sure we are building a world in which every individual has an opportunity to thrive.”""")
 st.markdown("Andrew NG - Co-founder and lead of Google Brain")
-st.title('Multi-class Sentiment Classification of customer text in Customer Support')
+
 st.header('Overview:')
 st.markdown("Customer Support across the globe face multiple challenges when try to solve customer queries. Very often customer support agents face a lot of issues identifying sentiments and the intent of the customer at hand. We will build a sub-system which will identify the customer’s emotion. To build a system which can understand the text given by a user, and identify the underlying emotions expressed by the user our text data has words which reflect very close to Greetings, Backstory, Justification, Gratitude, Rants, or Expressing Emotions. Identifying emotion beforehand and proceeding with the customer cautiously can elevate the customer’s mood, as well as help us in resolving their query.")
 st.write('\n')
