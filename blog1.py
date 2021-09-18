@@ -34,9 +34,14 @@ gdd.download_file_from_google_drive(file_id='1DC2bLhjAOLiZLSJVG4JhHjviO2xtAVvG',
 gdd.download_file_from_google_drive(file_id='14dMuT_7VHMDejyB_DckEIIad4_JxwQyn',
                                     dest_path='/app/cs1-blog/auc.png',
                                     unzip=False)
-  
-df = pd.read_csv('text_corpus.csv')
 
+
+gdd.download_file_from_google_drive(file_id='1GydE6I9rfqgdBHrsYUi0b3J73V_t2f-O',
+                                    dest_path='/app/cs1-blog/auc.png',
+                                    unzip=False)
+
+df = pd.read_csv('text_corpus.csv')
+st.image('ai.jpg')
 st.markdown("""“We have seen AI providing conversation and comfort to the lonely; we have also seen AI engaging in racial discrimination. Yet the biggest harm that AI is likely to do to individuals in the short term is job displacement, as the amount of work we can automate with AI is vastly larger than before. As leaders, it is incumbent on all of us to make sure we are building a world in which every individual has an opportunity to thrive.”""")
 st.markdown("Andrew NG - Co-founder and lead of Google Brain")
 st.title('Multi-class Sentiment Classification of customer text in Customer Support')
