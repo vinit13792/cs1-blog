@@ -26,6 +26,15 @@ gdd.download_file_from_google_drive(file_id='1LjjAWYIoEhMwOsIzdAuj0oBlGnz07Eqy',
 gdd.download_file_from_google_drive(file_id='16xqcoh3Tf4FOTEQdzVqqOI6izf-QWr8R',
                                     dest_path='/app/cs1-blog/download.png',
                                     unzip=False)
+
+gdd.download_file_from_google_drive(file_id='1DC2bLhjAOLiZLSJVG4JhHjviO2xtAVvG',
+                                    dest_path='/app/cs1-blog/roc.png',
+                                    unzip=False)
+
+gdd.download_file_from_google_drive(file_id='14dMuT_7VHMDejyB_DckEIIad4_JxwQyn',
+                                    dest_path='/app/cs1-blog/auc.png',
+                                    unzip=False)
+  
 df = pd.read_csv('text_corpus.csv')
 
 st.title('Multi-class Sentiment Classification of customer text in Customer Support')
@@ -59,9 +68,21 @@ st.markdown("* Micro f1 score: Calculate metrics globally by counting the total 
 st.markdown("* Macro f1 score: Calculate metrics for each label, and find their unweighted mean. This does not take label imbalance into account.")
 st.image('micro-f1.png')
 st.write('\n')
-st.markdown("2. Hamming loss: The Hamming loss is the fraction of labels that are incorrectly predicted.")
+st.markdown("2. Hamming loss:")
+st.markdown("* The Hamming loss is the fraction of labels that are incorrectly predicted.")
+st.markdown("* Hence, for the binary case (imbalanced or not), HL=1-Accuracy")
 st.image('download.png')
-
+st.write('\n')
+st.markdown("3. ROC-AUC:")
+st.markdown("* An ROC curve is a graph showing the performance of a classification model at all classification thresholds.")
+st.markdown("""* AUC stands for "Area under the ROC Curve." That is, AUC measures the entire two-dimensional area underneath the entire ROC curve (think integral calculus) from (0,0) to (1,1).""")
+st.markdown("""* An ROC curve plots TPR vs. FPR at different classification thresholds. Lowering the classification threshold classifies more items as positive, thus increasing both False Positives and True Positives.""")
+st.markdown("""* AUC provides an aggregate measure of performance across all possible classification thresholds. One way of interpreting AUC is as the probability that the model ranks a random positive example more highly than a random negative example.""")
+st.image('roc.png')
+st.markdown('ROC Curve')
+st.write('\n')
+st.image('auc.png')
+st.markdown('AUC Curve')
 
 import string
 import re
