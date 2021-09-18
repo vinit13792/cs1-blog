@@ -78,11 +78,11 @@ st.markdown("* An ROC curve is a graph showing the performance of a classificati
 st.markdown("""* AUC stands for "Area under the ROC Curve." That is, AUC measures the entire two-dimensional area underneath the entire ROC curve (think integral calculus) from (0,0) to (1,1).""")
 st.markdown("""* An ROC curve plots TPR vs. FPR at different classification thresholds. Lowering the classification threshold classifies more items as positive, thus increasing both False Positives and True Positives.""")
 st.markdown("""* AUC provides an aggregate measure of performance across all possible classification thresholds. One way of interpreting AUC is as the probability that the model ranks a random positive example more highly than a random negative example.""")
+st.markdown('* ROC Curve')
 st.image('roc.png')
-st.markdown('ROC Curve')
 st.write('\n')
+st.markdown('* AUC Curve')
 st.image('auc.png')
-st.markdown('AUC Curve')
 
 import string
 import re
