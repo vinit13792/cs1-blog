@@ -45,6 +45,7 @@ df = pd.read_csv('text_corpus.csv')
 st.title('Multi-class Sentiment Classification of customer text in Customer Support')
 st.write('\n')
 st.image('ai.jpg')
+st.write('\n')
 st.markdown("""“We have seen AI providing conversation and comfort to the lonely; we have also seen AI engaging in racial discrimination. Yet the biggest harm that AI is likely to do to individuals in the short term is job displacement, as the amount of work we can automate with AI is vastly larger than before. As leaders, it is incumbent on all of us to make sure we are building a world in which every individual has an opportunity to thrive.”""")
 st.markdown("Andrew NG - Co-founder and lead of Google Brain")
 
