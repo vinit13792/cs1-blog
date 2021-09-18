@@ -19,6 +19,10 @@ gdd.download_file_from_google_drive(file_id='13VXNiG3d98apB7L8f3luF-L4wyF3mxxx',
                                     unzip=False)
 
 
+gdd.download_file_from_google_drive(file_id='1LjjAWYIoEhMwOsIzdAuj0oBlGnz07Eqy',
+                                    dest_path='/app/cs1-blog/micro-f1.png',
+                                    unzip=False)
+
 gdd.download_file_from_google_drive(file_id='16xqcoh3Tf4FOTEQdzVqqOI6izf-QWr8R',
                                     dest_path='/app/cs1-blog/download.png',
                                     unzip=False)
@@ -53,6 +57,8 @@ st.markdown("* The formula for the F1 score is: F1 = 2 * (precision * recall) / 
 st.markdown("* In the multi-class and multi-label case, this is the weighted average of the F1 score of each class.")
 st.markdown("* Micro f1 score: Calculate metrics globally by counting the total true positives, false negatives and false positives. This is a better metric when we have class imbalance.")
 st.markdown("* Macro f1 score: Calculate metrics for each label, and find their unweighted mean. This does not take label imbalance into account.")
+st.image('micro-f1.png')
+st.write('\n')
 st.markdown("2. Hamming loss: The Hamming loss is the fraction of labels that are incorrectly predicted.")
 st.image('download.png')
 
