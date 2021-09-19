@@ -224,14 +224,15 @@ def get_sent_dict(df):
 sent_dict = get_sent_dict(df)
 
 def get_plot(sentence_dict):
+  
   keys = sentence_dict.keys()
   vals = sentence_dict.values()
 
   gen_plot = plt.figure(figsize=(20,5))
   plt.bar(keys, vals, align='center', edgecolor='black')
 
-  for i in range(len(vals)):
-    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
+  for index in range(len(vals)):
+    plt.text(index, vals[index], vals[index], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
 
   plt.xlabel('Sentiments')
   plt.ylabel('Datapoint')
@@ -241,5 +242,5 @@ def get_plot(sentence_dict):
   return gen_plot
 
 gen_plot = get_plot(sent_dict)
-st.pyplot(gen_plot)
 
+st.pyplot(gen_plot)
