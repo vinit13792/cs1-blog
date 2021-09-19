@@ -190,41 +190,45 @@ st.write('\n\n')
 st.header('Dataset Preview')
 st.dataframe(df.head())
 
-emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
-sent_dict = dict()
+def get_sent_dict(df):
+  emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
+  sent_dict = dict()
 
-for i in range(len(emotions)):
-  sent_dict[emotions[i]] = df[df[emotions[i]]==1].shape[0]
-  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1)].shape[0]
-  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & (df[emotions[i-2]]==1)].shape[0]
-  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & 
+  for i in range(len(emotions)):
+    sent_dict[emotions[i]] = df[df[emotions[i]]==1].shape[0]
+    sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1)].shape[0]
+    sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & (df[emotions[i-2]]==1)].shape[0]
+    sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & 
                                                                                                                                                                (df[emotions[i-2]]==1)
                                                                                                                                                                & (df[emotions[i-3]]==1)].shape[0]
-  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]  + ' ' + '&' + ' ' + emotions[i-4]] = df[(df[emotions[i]]==1) & 
+    sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]  + ' ' + '&' + ' ' + emotions[i-4]] = df[(df[emotions[i]]==1) & 
                                                                                                                                                                        (df[emotions[i-1]]==1) & 
                                                                                                                                                                (df[emotions[i-2]]==1)
                                                                                                                                                                & (df[emotions[i-3]]==1)
                                                                                                                                                                & (df[emotions[i-4]]==1)].shape[0]
-  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5]] = df[(df[emotions[i]]==1) & 
+    sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5]] = df[(df[emotions[i]]==1) & 
                                                                                                                                                                        (df[emotions[i-1]]==1) & 
                                                                                                                                                                (df[emotions[i-2]]==1)
                                                                                                                                                                & (df[emotions[i-3]]==1)
                                                                                                                                                                & (df[emotions[i-4]]==1)
                                                                                                                                                                & (df[emotions[i-5]]==1)].shape[0]
-  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5] + ' ' + '&' + ' ' + emotions[i-6]] = df[(df[emotions[i]]==1) & 
+    sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5] + ' ' + '&' + ' ' + emotions[i-6]] = df[(df[emotions[i]]==1) & 
                                                                                                                                                                        (df[emotions[i-1]]==1) & 
                                                                                                                                                                (df[emotions[i-2]]==1)
                                                                                                                                                                & (df[emotions[i-3]]==1)
                                                                                                                                                                & (df[emotions[i-4]]==1)
                                                                                                                                                                & (df[emotions[i-5]]==1)
                                                                                                                                                                & (df[emotions[i-6]]==1)].shape[0]
-  
+  return sent_dict
+
+sent_dict = get_sent_dict(df)
 
 keys = sent_dict.keys()
 vals = sent_dict.values()
 
 gen_plot = plt.figure(figsize=(20,5))
 plt.bar(keys, vals, align='center', edgecolor='black')
+
 for i in range(len(vals)):
   plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
 
