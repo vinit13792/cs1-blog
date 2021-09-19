@@ -225,6 +225,9 @@ vals = sent_dict.values()
 
 gen_plot = plt.figure(figsize=(20,5))
 plt.bar(keys, vals, align='center', edgecolor='black')
+for i in range(len(vals)):
+  plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
+
 plt.xlabel('Sentiments')
 plt.ylabel('Datapoint')
 plt.xticks(rotation=90)
