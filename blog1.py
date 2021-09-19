@@ -101,6 +101,7 @@ st.write('\n')
 st.header('Existing Solutions:')
 st.markdown('Mondher Bouazizi and Tomoaki Ohtsuki in their 2019 IEEE paper came up with a really interesting approach to preprocess text data on tweets. Their approach was to break up a sentence into multiple portions, take each element and count its occurence. A very simple approach, yet very powerful. They use a tool called SENTA which extracts multiple characteristics of a sentence like punctuations, syntactic features, unigram features, sentiment related features, pattern related features.')
 st.markdown('Apart from the common methods known at the time, they also came up with new application of something known as synsets. Synsets is just a fancy way of saying synonym of a synonym. When you take synonym of a word, you have one synonym, but when you find multiple synonyms of a single word, you a get a set of words which are synonyms of a root word. This level of Depth is Depth 1 Synsets. And when you do this again on but this time on each word in this set, this level of depth is called Depth 2 Synsets. The authors came up with an approach to find synsets till Depth 4.')
+st.markdown('This approach achieved a overall score of 60.2% accuracy on tweets for a Multiclass problem when the authors tested this on dataset having 7 sentiments. And on a binary classification acheived 81.3% accuracy.')
 
 
 import string
