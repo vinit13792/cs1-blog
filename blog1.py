@@ -238,4 +238,4 @@ plt.ylabel('Datapoint')
 plt.xticks(rotation=90)
 plt.title('Count of datapoints per sentiment')
 st.pyplot(gen_plot)
-
+'''
