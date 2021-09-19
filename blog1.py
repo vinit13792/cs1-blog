@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import nltk
@@ -12,6 +13,7 @@ from sklearn.metrics import roc_curve, auc
 import joblib
 import os
 import pickle
+plt.style.use('seaborn')
 
 
 gdd.download_file_from_google_drive(file_id='13VXNiG3d98apB7L8f3luF-L4wyF3mxxx',
@@ -179,8 +181,51 @@ def clean_text(df, feature):
         
   return cleaned_text
   
+df['clean_text'] = clean_text(df, 'Text')
+
 df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
 
 st.write('\n\n')
 st.header('Dataset Preview')
 st.dataframe(df.head())
+
+emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
+sent_dict = dict()
+
+for i in range(len(emotions)):
+  sent_dict[emotions[i]] = df[df[emotions[i]]==1].shape[0]
+  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1)].shape[0]
+  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & (df[emotions[i-2]]==1)].shape[0]
+  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)].shape[0]
+  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]  + ' ' + '&' + ' ' + emotions[i-4]] = df[(df[emotions[i]]==1) & 
+                                                                                                                                                                       (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)
+                                                                                                                                                               & (df[emotions[i-4]]==1)].shape[0]
+  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5]] = df[(df[emotions[i]]==1) & 
+                                                                                                                                                                       (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)
+                                                                                                                                                               & (df[emotions[i-4]]==1)
+                                                                                                                                                               & (df[emotions[i-5]]==1)].shape[0]
+  sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5] + ' ' + '&' + ' ' + emotions[i-6]] = df[(df[emotions[i]]==1) & 
+                                                                                                                                                                       (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)
+                                                                                                                                                               & (df[emotions[i-4]]==1)
+                                                                                                                                                               & (df[emotions[i-5]]==1)
+                                                                                                                                                               & (df[emotions[i-6]]==1)].shape[0]
+  
+
+keys = sent_dict.keys()
+vals = sent_dict.values()
+
+gen_plot = plt.figure(figsize=(20,5))
+plt.bar(keys, vals, align='center', edgecolor='black')
+plt.xlabel('Sentiments')
+plt.ylabel('Datapoint')
+plt.xticks(rotation=90)
+plt.title('Count of datapoints per sentiment')
+st.pyplot(gen_plot)
