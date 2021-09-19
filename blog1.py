@@ -189,7 +189,7 @@ df['clean_text'] = clean_text(df, 'Text')
 st.write('\n\n')
 st.header('Dataset Preview')
 st.dataframe(df.head())
-"""
+
 emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
 sent_dict = dict()
 
@@ -230,4 +230,4 @@ plt.ylabel('Datapoint')
 plt.xticks(rotation=90)
 plt.title('Count of datapoints per sentiment')
 st.pyplot(gen_plot)
-"""
+
