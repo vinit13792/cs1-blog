@@ -223,19 +223,22 @@ def get_sent_dict(df):
 
 sent_dict = get_sent_dict(df)
 
-'''
-keys = sent_dict.keys()
-vals = sent_dict.values()
+def get_plot(sentence_dict):
+  keys = sent_dict.keys()
+  vals = sent_dict.values()
 
-gen_plot = plt.figure(figsize=(20,5))
-plt.bar(keys, vals, align='center', edgecolor='black')
+  gen_plot = plt.figure(figsize=(20,5))
+  plt.bar(keys, vals, align='center', edgecolor='black')
 
-for i in range(len(vals)):
-  plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
+  for i in range(len(vals)):
+    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
 
-plt.xlabel('Sentiments')
-plt.ylabel('Datapoint')
-plt.xticks(rotation=90)
-plt.title('Count of datapoints per sentiment')
+  plt.xlabel('Sentiments')
+  plt.ylabel('Datapoint')
+  plt.xticks(rotation=90)
+  plt.title('Count of datapoints per sentiment')
+  return gen_plot
+
+gen_plot = get_plot(sent_dict)
 st.pyplot(gen_plot)
-'''
+
