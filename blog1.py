@@ -58,7 +58,7 @@ st.markdown("Tourism industry is something that needs to handle their customers 
 st.write('\n')
 st.header('Source of Data:')
 st.markdown('Verint Next IT designs and builds IVAs on behalf of other companies, typically  for customer service automation. This allows them to access large number of IVA-Human conversation that vary widely across domains. Ian Beaver, Cynthia Freeman from Verint and Abdullah Mueen from University of New Mexico were kind enough to share this data on Kaggle so this problem can be explored and solved by people from various domains across the globe.')
-
+st.markdown('Human-computer data was collected from three live customer service IVAs in the language domains of airline, train travel, and telecommunications. The selected IVAs are implemented as mixed-initiative dialog systems, each understanding more than 1,000 unique user intentions. These IVAs use a symbolic ontological approach to natural language understanding, and all three were very mature, each having been deployed and continuously refined for four or more years. The IVAs have conversational interfaces exposed through company websites and mobile applications. In addition, the IVAs are multi-modal, accepting both speech and textual inputs, and also have human-like qualities with simulated personalities, interests, and an avatar.')
 st.header('Business Constraints:')
 st.markdown('1. Time constraint is not a constraint as we want to take a minimum of half hour to address the customer.')
 st.markdown('2. Incorrect response will affect the travel agency')
