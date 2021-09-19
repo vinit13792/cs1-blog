@@ -223,6 +223,7 @@ def get_sent_dict(df):
 
 sent_dict = get_sent_dict(df)
 
+'''
 keys = sent_dict.keys()
 vals = sent_dict.values()
 
