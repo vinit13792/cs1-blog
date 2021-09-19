@@ -148,7 +148,7 @@ def Find(string):
 def clean_text(df, feature):
   cleaned_text = []
     
-  for i in tqdm(range(df.shape[0])):
+  for i in range(df.shape[0]):
     
     doc = df[feature].values[i]
         
