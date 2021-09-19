@@ -232,7 +232,7 @@ def get_plot(sentence_dict):
   plt.bar(keys, vals, align='center', edgecolor='black')
 
   for i in range(len(vals)):
-    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
+    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.3))
 
   plt.xlabel('Sentiments')
   plt.ylabel('Datapoint')
