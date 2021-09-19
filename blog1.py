@@ -231,8 +231,8 @@ def get_plot(sentence_dict):
   gen_plot = plt.figure(figsize=(20,5))
   plt.bar(keys, vals, align='center', edgecolor='black')
 
-  for index in range(len(vals)):
-    plt.text(index, vals[index], vals[index], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
+  #for i in range(len(vals)):
+  #  plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
 
   plt.xlabel('Sentiments')
   plt.ylabel('Datapoint')
