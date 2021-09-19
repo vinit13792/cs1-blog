@@ -58,7 +58,7 @@ st.markdown("Tourism industry is something that needs to handle their customers 
 st.write('\n')
 st.header('Source of Data:')
 st.markdown('Verint Next IT designs and builds IVAs on behalf of other companies, typically  for customer service automation. This allows them to access large number of IVA-Human conversation that vary widely across domains. Ian Beaver, Cynthia Freeman from Verint and Abdullah Mueen from University of New Mexico were kind enough to share this data on Kaggle so this problem can be explored and solved by people from various domains across the globe.')
-st.markdown('TripAdvisor.com is commonly used in literature as a source of travel-related data (Banerjee and Chua 2016; Valdivia, Luz´on, and Herrera 2017). The TripAdvisor.com airline forum includes discussions of airlines and polices, flight pricing and comparisons, flight booking websites, airports, and general flying tips and suggestions. The authors observed that the intentions of requests posted by users were very similar to that of requests handled by airline travel IVA. While a forum setting is a different type of interaction than chatting with a customer service representative (user behavior is expected to differ when the audience is not paid to respond), it was the best fit that authors could obtain for their study. A random sample of 2,000 threads from the 62,736 present during August 2016 was taken, and the initial post containing the problem statement was extracted. We use request hereafter to refer to the complete text of an initial turn or post extracted as described.')
+st.markdown('TripAdvisor.com is commonly used in literature as a source of travel-related data (Banerjee and Chua 2016; Valdivia, Luz´on, and Herrera 2017). The TripAdvisor.com airline forum includes discussions of airlines and polices, flight pricing and comparisons, flight booking websites, airports, and general flying tips and suggestions. The authors observed that the intentions of requests posted by users were very similar to that of requests handled by airline travel IVA. While a forum setting is a different type of interaction than chatting with a customer service representative (user behavior is expected to differ when the audience is not paid to respond), it was the best fit that authors could obtain for their study. A random sample of 2,000 threads from the 62,736 present during August 2016 was taken, and the initial post containing the problem statement was extracted.')
 st.header('Business Constraints:')
 st.markdown('1. Time constraint is not a constraint as we want to take a minimum of half hour to address the customer.')
 st.markdown('2. Incorrect response will affect the travel agency')
@@ -97,6 +97,11 @@ st.image('roc.png')
 st.write('\n')
 st.markdown('* AUC Curve')
 st.image('auc.png')
+st.write('\n')
+st.header('Existing Solutions:')
+st.markdown('Mondher Bouazizi and Tomoaki Ohtsuki in their 2019 IEEE paper came up with a really interesting approach to preprocess text data on tweets. Their approach was to break up a sentence into multiple portions, take each element and count its occurence. A very simple approach, yet very powerful. They use a tool called SENTA which extracts multiple characteristics of a sentence like punctuations, syntactic features, unigram features, sentiment related features, pattern related features.')
+st.markdown('Apart from the common methods known at the time, they also came up with new application of something known as synsets. Synsets is just a fancy way of saying synonym of a synonym. When you take synonym of a word, you have one synonym, but when you find multiple synonyms of a single word, you a get a set of words which are synonyms of a root word. This level of Depth is Depth 1 Synsets. And when you do this again on but this time on each word in this set, this level of depth is called Depth 2 Synsets. The authors came up with an approach to find synsets till Depth 4.')
+
 
 import string
 import re
