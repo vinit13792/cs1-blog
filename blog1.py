@@ -180,10 +180,11 @@ def clean_text(df, feature):
     cleaned_text.append(doc)
         
   return cleaned_text
-  
-df['clean_text'] = clean_text(df, 'Text')
+
 
 df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
+
+df['clean_text'] = clean_text(df, 'Text')
 
 st.write('\n\n')
 st.header('Dataset Preview')
@@ -218,7 +219,7 @@ for i in range(len(emotions)):
                                                                                                                                                                & (df[emotions[i-5]]==1)
                                                                                                                                                                & (df[emotions[i-6]]==1)].shape[0]
   
-
+"""
 keys = sent_dict.keys()
 vals = sent_dict.values()
 
@@ -229,3 +230,4 @@ plt.ylabel('Datapoint')
 plt.xticks(rotation=90)
 plt.title('Count of datapoints per sentiment')
 st.pyplot(gen_plot)
+"""
