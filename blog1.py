@@ -184,12 +184,12 @@ def clean_text(df, feature):
 
 df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
 
-df['clean_text'] = clean_text(df, 'Text')
+#df['clean_text'] = clean_text(df, 'Text')
 
 st.write('\n\n')
 st.header('Dataset Preview')
 st.dataframe(df.head())
-
+"""
 emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
 sent_dict = dict()
 
@@ -219,7 +219,7 @@ for i in range(len(emotions)):
                                                                                                                                                                & (df[emotions[i-5]]==1)
                                                                                                                                                                & (df[emotions[i-6]]==1)].shape[0]
   
-"""
+
 keys = sent_dict.keys()
 vals = sent_dict.values()
 
