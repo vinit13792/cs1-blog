@@ -224,8 +224,8 @@ def get_sent_dict(df):
 sent_dict = get_sent_dict(df)
 
 def get_plot(sentence_dict):
-  keys = sent_dict.keys()
-  vals = sent_dict.values()
+  keys = sentence_dict.keys()
+  vals = sentence_dict.values()
 
   gen_plot = plt.figure(figsize=(20,5))
   plt.bar(keys, vals, align='center', edgecolor='black')
@@ -237,6 +237,7 @@ def get_plot(sentence_dict):
   plt.ylabel('Datapoint')
   plt.xticks(rotation=90)
   plt.title('Count of datapoints per sentiment')
+  
   return gen_plot
 
 gen_plot = get_plot(sent_dict)
