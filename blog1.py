@@ -187,7 +187,8 @@ df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], a
 df['clean_text'] = clean_text(df, 'Text')
 
 st.write('\n\n')
-st.header('Dataset Preview')
+st.header('Dataset Preview: ')
+st.markdown("Let's how our dataset looks")
 st.dataframe(df.head())
 
 def get_sent_dict(df):
@@ -243,4 +244,5 @@ def get_plot(sentence_dict):
 
 gen_plot = get_plot(sent_dict)
 
+st.markdown('Our text has multiple labels. These labels are the target variables. But we need to check how many of these sentiments we have per sentence. So we need to know the distribution of sentiments')
 st.pyplot(gen_plot)
