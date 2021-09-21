@@ -364,10 +364,10 @@ def get_punctuations(data, feature):
     # get unique punctuations into the list
     # We are adding one to each punctuation since we want to find ratio of punc
     # we may encounter divide by zero error 
-    p_dict = dict([(i,1) for i in string.punctuation])
+    p_dict = dict([(k,1) for k in string.punctuation])
     
     # Get all the punctuations from text and count them
-    for i in tqdm(range(data.shape[0])):
+    for i in range(data.shape[0]):
         
         text = data[feature].values[i]
         
@@ -384,9 +384,9 @@ def get_punctuations(data, feature):
     # https://stackoverflow.com/a/26367880/10632473
     punc_per_text = defaultdict(list)
     
-    for i in tqdm(range(data.shape[0])):
+    for j in range(data.shape[0]):
             
-        text = data[feature].values[i]
+        text = data[feature].values[j]
             
         punc = re.findall(pattern, text)
         
