@@ -181,7 +181,6 @@ def clean_text(df, feature):
         
   return cleaned_text
 
-
 df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], axis=1, inplace=True)
 
 df['clean_text'] = clean_text(df, 'Text')
@@ -262,6 +261,7 @@ with st.echo(code_location='below'):
       cleaned_text.append(doc)
         
     return cleaned_text
+st.markdown("One thing to add here is we don't need all the preprocessing concepts that exist in NLP always. Our preprocessing steps should depend on our use case. As we can see above I have not used preprocessing techniques like stemming, lemmatization, or removing stop words. The reason we did not use these techniques is because we need to capture the pattern features, syntactical features, as well as parts of speech. Cleaning the data with such techniques will cause us to loose imformation which is critical to us in this case.")
 
 
 def get_sent_dict(df):
