@@ -351,4 +351,4 @@ with st.echo(code_location='below'):
                                                                                                                                                                & (df[emotions[i-6]]==1)].shape[0]
     return sent_dict
 
-  st.pyplot(gen_plot)
+st.pyplot(gen_plot)
