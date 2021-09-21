@@ -462,9 +462,10 @@ def get_punc_plot(sentiment, feature):
     plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.4))
   plt.xlabel('Punctuations')
   plt.ylabel('Datapoint')
-  plt.title(f'Count of punctuations in {sentiment} class')
+  plt.title('Count of punctuations in class')
   return fig
 
 senti_plot = get_punc_plot('Greeting', 'Text')
+st.subheader('Punctuation Distribution in Greeting Class')
 st.pyplot(senti_plot)
 
