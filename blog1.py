@@ -314,7 +314,7 @@ def get_plot(sentence_dict):
   return gen_plot
 
 gen_plot = get_plot(sent_dict)
-st.header('Dataset Preview:')
+st.header('Exploratory Data Analysis:')
 st.markdown("Let's see how our dataset looks")
 st.dataframe(df.head())
 st.markdown('Our text has multiple labels. These labels are the target variables. But we need to check how many of these sentiments we have per sentence. So we need to know the distribution of these sentiments. We also need to know if each sentence is associated with multiple sentiments or not.')
