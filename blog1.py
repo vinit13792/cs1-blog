@@ -450,7 +450,7 @@ with st.echo(code_location='below'):
             
     return p_dict, punc_per_text
   
-@st.cache()
+
 def get_punc_plot(sentiment, feature):
   sentim = df[df[sentiment]==1]
   punc_dict_sentim, _ = get_punctuations(sentim, feature)
