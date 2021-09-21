@@ -188,9 +188,11 @@ df['clean_text'] = clean_text(df, 'Text')
 
 st.write('\n\n')
 st.header('Dataset Preview: ')
-st.markdown("Let's how our dataset looks")
+st.markdown("Let's see how our dataset looks")
 st.dataframe(df.head())
 
+st.markdown('Our data has a lot of text. So the first step should be preprocessing. Preprocessing is one of the most important in NLP based applications as everything you do later depends on how thoroughly do the data cleaning. Mistakes in this step often cause error in modelling as most of the ML or DL models require cleaned data. Uncleaned data often causes failures/errors before modelling step.')
+st.echo(code_location='above')
 def get_sent_dict(df):
   emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
   sent_dict = dict()
@@ -243,6 +245,7 @@ def get_plot(sentence_dict):
   return gen_plot
 
 gen_plot = get_plot(sent_dict)
+
 
 st.markdown('Our text has multiple labels. These labels are the target variables. But we need to check how many of these sentiments we have per sentence. So we need to know the distribution of sentiments')
 st.pyplot(gen_plot)
