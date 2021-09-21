@@ -454,8 +454,8 @@ with st.echo(code_location='below'):
 def get_punc_plot(sentiment, feature):
   sentim = df[df[sentiment]==1]
   punc_dict_sentim, _ = get_punctuations(sentim, feature)
-  keys = punc_dict_sentim.keys()
-  vals = punc_dict_sentim.values()
+  keys = list(punc_dict_sentim.keys())
+  vals = list(punc_dict_sentim.values())
   fig = plt.figure(figsize=(20,5))
   plt.bar(keys, vals, align='center', edgecolor='black')
   for i in range(len(vals)):
