@@ -413,7 +413,7 @@ with st.echo(code_location='below'):
     p_dict = dict([(i,1) for i in string.punctuation])
     
     # Get all the punctuations from text and count them
-    for i in tqdm(range(data.shape[0])):
+    for i in range(data.shape[0]):
         
         text = data[feature].values[i]
         
@@ -430,7 +430,7 @@ with st.echo(code_location='below'):
     # https://stackoverflow.com/a/26367880/10632473
     punc_per_text = defaultdict(list)
     
-    for i in tqdm(range(data.shape[0])):
+    for i in range(data.shape[0]):
             
         text = data[feature].values[i]
             
