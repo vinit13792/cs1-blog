@@ -352,3 +352,119 @@ with st.echo(code_location='below'):
     return sent_dict
 
 st.pyplot(gen_plot)
+st.markdown("It is evident that people love to talk, and give a back story in tourism. Of course, they need the services, so its important that the customer representative understand where they're coming from, and how important it is for them to put their point forward in a very descriptive way. We see that they are quite some ranting, and other, which is a mix of emotions. We also see very few people being thankful for the services or query resolution. Quite a lot of people do greet during the query, which is good, although it will be interesting to see which of the datapoints have multiple sentiments associated with it.")
+st.write('\n')
+st.subheader("Distribution of Punctuations per sentiment")
+st.markdown("As per the 2019 IEEE paper, the authors used punctuation count as a  feature. We will bed using the same in our case and plot the distribution of punctuations for each sentiment")
+st.markdown('We will write a function based punctuations. We will create a dictionary of punctuations. Then we will index through each punctuations in the sentence and count them, and later plot them.')
+
+@st.cache()
+def get_punctuations(data, feature):
+    
+    # get unique punctuations into the list
+    # We are adding one to each punctuation since we want to find ratio of punc
+    # we may encounter divide by zero error 
+    p_dict = dict([(i,1) for i in string.punctuation])
+    
+    # Get all the punctuations from text and count them
+    for i in tqdm(range(data.shape[0])):
+        
+        text = data[feature].values[i]
+        
+        pattern = r'\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-\+|\,|\"|\?|\.|\:|\;|\=|\[|\]|\{|\}|\_|\\|\/'
+        
+        punctuations = re.findall(pattern, text)
+        
+        for p in punctuations:
+            
+            if p in p_dict.keys():
+                
+                p_dict[p] +=1           
+    
+    # https://stackoverflow.com/a/26367880/10632473
+    punc_per_text = defaultdict(list)
+    
+    for i in tqdm(range(data.shape[0])):
+            
+        text = data[feature].values[i]
+            
+        punc = re.findall(pattern, text)
+        
+        counts = Counter(punc)
+        
+        for punctuation in p_dict:
+                
+            if counts.get(punctuation)==None:
+                    
+                punc_per_text[punctuation].append(1)
+                
+            if counts.get(punctuation)!=None:
+                
+                punc_per_text[punctuation].append(counts.get(punctuation))
+            
+    return p_dict, punc_per_text
+
+with st.echo(code_location='below'):
+  def get_punctuations(data, feature):
+    
+    # get unique punctuations into the list
+    # We are adding one to each punctuation since we want to find ratio of punc
+    # we may encounter divide by zero error 
+    p_dict = dict([(i,1) for i in string.punctuation])
+    
+    # Get all the punctuations from text and count them
+    for i in tqdm(range(data.shape[0])):
+        
+        text = data[feature].values[i]
+        
+        pattern = r'\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-\+|\,|\"|\?|\.|\:|\;|\=|\[|\]|\{|\}|\_|\\|\/'
+        
+        punctuations = re.findall(pattern, text)
+        
+        for p in punctuations:
+            
+            if p in p_dict.keys():
+                
+                p_dict[p] +=1           
+    
+    # https://stackoverflow.com/a/26367880/10632473
+    punc_per_text = defaultdict(list)
+    
+    for i in tqdm(range(data.shape[0])):
+            
+        text = data[feature].values[i]
+            
+        punc = re.findall(pattern, text)
+        
+        counts = Counter(punc)
+        
+        for punctuation in p_dict:
+                
+            if counts.get(punctuation)==None:
+                    
+                punc_per_text[punctuation].append(1)
+                
+            if counts.get(punctuation)!=None:
+                
+                punc_per_text[punctuation].append(counts.get(punctuation))
+            
+    return p_dict, punc_per_text
+  
+@st.cache()
+def get_punc_plot(sentiment, feature):
+  sentim = df[df[sentiment]==1]
+  punc_dict_sentim, _ = get_punctuations(sentim, feature)
+  keys = punc_dict_sentim.keys()
+  vals = punc_dict_sentim.values()
+  fig = plt.figure(figsize=(20,5))
+  plt.bar(keys, vals, align='center', edgecolor='black')
+  for i in range(len(vals)):
+    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.4))
+  plt.xlabel('Punctuations')
+  plt.ylabel('Datapoint')
+  plt.title(f'Count of punctuations in {sentiment} class')
+  return fig
+
+senti_plot = get_punc_plot('Greeting', 'Text')
+st.pyplot(senti_plot)
+
