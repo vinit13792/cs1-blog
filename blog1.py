@@ -192,7 +192,27 @@ st.markdown("Let's see how our dataset looks")
 st.dataframe(df.head())
 
 st.markdown('Our data has a lot of text. So the first step should be preprocessing. Preprocessing is one of the most important in NLP based applications as everything you do later depends on how thoroughly do the data cleaning. Mistakes in this step often cause error in modelling as most of the ML or DL models require cleaned data. Uncleaned data often causes failures/errors before modelling step.')
-st.echo(code_location='above')
+st.subheader('1. Removing Decontractions: ')
+st.markdown("""Decontractions is a process of expanding words which are shortened words, words like "can't", "should've", "I'll" etc. ML algorithms are advanced enough to encode words, but those words also need to simplified for ingestion This process is one of those""")
+with st.echo(code_location='below'):
+  def decontracted(phrase):
+    # specific
+    phrase = re.sub(r"won't", "will not", phrase)
+    phrase = re.sub(r"can\'t", "can not", phrase)
+
+    # general
+    phrase = re.sub(r"n\'t", " not", phrase)
+    phrase = re.sub(r"\'re", " are", phrase)
+    phrase = re.sub(r"\'s", " is", phrase)
+    phrase = re.sub(r"\'d", " would", phrase)
+    phrase = re.sub(r"\'ll", " will", phrase)
+    phrase = re.sub(r"\'t", " not", phrase)
+    phrase = re.sub(r"\'ve", " have", phrase)
+    phrase = re.sub(r"\'m", " am", phrase)
+    return phrase
+  
+  
+  
 def get_sent_dict(df):
   emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
   sent_dict = dict()
