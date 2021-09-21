@@ -465,7 +465,28 @@ def get_punc_plot(sentiment, feature):
   plt.title('Count of punctuations in class')
   return fig
 
-senti_plot = get_punc_plot('Greeting', 'Text')
+senti_plot_greet = get_punc_plot('Greeting', 'Text')
 st.subheader('Punctuation Distribution in Greeting Class')
-st.pyplot(senti_plot)
+st.pyplot(senti_plot_greet)
+
+senti_plot_justifn = get_punc_plot('Justification', 'Text')
+st.subheader('Punctuation Distribution in Justification Class')
+st.pyplot(senti_plot_justifn)
+
+senti_plot_rant = get_punc_plot('Rant', 'Text')
+st.subheader('Punctuation Distribution in Rant Class')
+st.pyplot(senti_plot_rant)
+
+senti_plot_grat = get_punc_plot('Gratitude', 'Text')
+st.subheader('Punctuation Distribution in Gratitude Class')
+st.pyplot(senti_plot_grat)
+
+senti_plot_other = get_punc_plot('Other', 'Text')
+st.subheader('Punctuation Distribution in Other Class')
+st.pyplot(senti_plot_other)
+
+senti_plot_expemo = get_punc_plot('Express Emotion', 'Text')
+st.subheader('Punctuation Distribution in Express Emotion Class')
+st.pyplot(senti_plot_expemo)
+
 
