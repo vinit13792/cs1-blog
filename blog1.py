@@ -187,13 +187,15 @@ df.drop(['MergedSelections','Unselected','Selected','Threshold','SentenceID'], a
 df['clean_text'] = clean_text(df, 'Text')
 
 st.write('\n\n')
-st.header('Dataset Preview: ')
-st.markdown("Let's see how our dataset looks")
-st.dataframe(df.head())
+st.header('Data Preprocessing: ')
+##st.markdown("Let's see how our dataset looks")
+#st.dataframe(df.head())
 
 st.markdown('Our data has a lot of text. So the first step should be preprocessing. Preprocessing is one of the most important in NLP based applications as everything you do later depends on how thoroughly do the data cleaning. Mistakes in this step often cause error in modelling as most of the ML or DL models require cleaned data. Uncleaned data often causes failures/errors before modelling step.')
 st.subheader('1. Removing Decontractions: ')
-st.markdown("""Decontractions is a process of expanding words which are shortened words, words like "can't", "should've", "I'll" etc. ML algorithms are advanced enough to encode words, but those words also need to simplified for ingestion This process is one of those""")
+st.markdown("""Decontractions is a process of expanding words which are shortened words, words like "can't", "should've", "I'll" etc. ML libraries are advanced enough to encode words, but those words also need to be simplified for ingestion This process is one of those where we need to simplify shortened words.""")
+st.markdown('We will use regex for this as it is fast and results are accurate.')
+st.markdown("The line re.sub takes three most important arguments i.e. current_word, replacement_word, variable which has the text. It's really that simple.")
 with st.echo(code_location='below'):
   def decontracted(phrase):
     # specific
@@ -211,8 +213,57 @@ with st.echo(code_location='below'):
     phrase = re.sub(r"\'m", " am", phrase)
     return phrase
   
+st.subheader('2. Cleaning the data: ')
+st.markdown("""Now that we have decontracted the words in our dataset, the next step should be to remove punctuations, urls, digits, and words appearing inside brackets. """)
+with st.echo(code_location='below'):
+  def Find(string):
+    # findall() has been used 
+    # with valid conditions for urls in string
+    regex = r"(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]+|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:'\".,<>?«»“”‘’]))"
+    url = re.findall(regex,string) 
+    temp = ''
+    for x in url:
+      temp+=''.join(x[0])
+    return temp
   
-  
+ 
+  def clean_text(df, feature):
+    cleaned_text = []
+    
+    for i in range(df.shape[0]):
+    
+      doc = df[feature].values[i]
+        
+      url = Find(doc)
+        
+      doc = re.sub(url, '', doc)
+        
+      doc = re.findall(r'\w+', doc)
+        
+      table = str.maketrans('', '', string.punctuation)
+        
+      stripped = [w.translate(table) for w in doc]
+        
+      doc = ' '.join(stripped)
+        
+      doc = doc.lower()
+
+      # remove text followed by numbers
+      doc = re.sub('[^A-Za-z0-9]+', ' ', doc)
+
+      # remove text which appears inside < > or text preceeding or suceeding <, >
+      doc = re.sub(r'< >|<.*?>|<>|\>|\<', ' ', doc)
+
+      # remove anything inside brackets
+      doc = re.sub(r'\(.*?\)', ' ', doc)
+        
+      # remove digits
+      doc = re.sub(r'\d+', ' ', doc)
+      cleaned_text.append(doc)
+        
+    return cleaned_text
+
+
 def get_sent_dict(df):
   emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
   sent_dict = dict()
