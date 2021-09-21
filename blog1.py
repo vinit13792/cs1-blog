@@ -187,8 +187,6 @@ df['clean_text'] = clean_text(df, 'Text')
 
 st.write('\n\n')
 st.header('Data Preprocessing: ')
-##st.markdown("Let's see how our dataset looks")
-#st.dataframe(df.head())
 
 st.markdown('Our data has a lot of text. So the first step should be preprocessing. Preprocessing is one of the most important in NLP based applications as everything you do later depends on how thoroughly do the data cleaning. Mistakes in this step often cause error in modelling as most of the ML or DL models require cleaned data. Uncleaned data often causes failures/errors before modelling step.')
 st.subheader('1. Removing Decontractions: ')
@@ -294,7 +292,7 @@ def get_sent_dict(df):
                                                                                                                                                                & (df[emotions[i-5]]==1)
                                                                                                                                                                & (df[emotions[i-6]]==1)].shape[0]
   return sent_dict
-
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     
 sent_dict = get_sent_dict(df)
 
 def get_plot(sentence_dict):
@@ -316,7 +314,41 @@ def get_plot(sentence_dict):
   return gen_plot
 
 gen_plot = get_plot(sent_dict)
+st.header('Dataset Preview:')
+st.markdown("Let's see how our dataset looks")
+st.dataframe(df.head())
+st.markdown('Our text has multiple labels. These labels are the target variables. But we need to check how many of these sentiments we have per sentence. So we need to know the distribution of these sentiments. We also need to know if each sentence is associated with multiple sentiments or not.')
+st.markdown("To find out combination of sentiments associated with each sentence, let's write a custom function which would get us exactly that.")
+with st.echo(code_location='below'):
+  def get_sent_dict(df):
+    emotions = ['Greeting', 'Backstory', 'Justification', 'Rant', 'Gratitude', 'Other', 'Express Emotion']
+    sent_dict = dict()
 
+    for i in range(len(emotions)):
+      sent_dict[emotions[i]] = df[df[emotions[i]]==1].shape[0]
+      sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1)].shape[0]
+      sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & (df[emotions[i-2]]==1)].shape[0]
+      sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]] = df[(df[emotions[i]]==1) & (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)].shape[0]
+      sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3]  + ' ' + '&' + ' ' + emotions[i-4]] = df[(df[emotions[i]]==1) & 
+                                                                                                                                                                       (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)
+                                                                                                                                                               & (df[emotions[i-4]]==1)].shape[0]
+      sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5]] = df[(df[emotions[i]]==1) & 
+                                                                                                                                                                       (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)
+                                                                                                                                                               & (df[emotions[i-4]]==1)
+                                                                                                                                                               & (df[emotions[i-5]]==1)].shape[0]
+      sent_dict[emotions[i] + ' ' + '&' + ' ' + emotions[i-1] + ' ' + '&' + ' ' + emotions[i-2] + ' ' + '&' + ' ' + emotions[i-3] + ' ' + '&' + ' ' + emotions[i-4] + ' ' + '&' + ' ' + emotions[i-5] + ' ' + '&' + ' ' + emotions[i-6]] = df[(df[emotions[i]]==1) & 
+                                                                                                                                                                       (df[emotions[i-1]]==1) & 
+                                                                                                                                                               (df[emotions[i-2]]==1)
+                                                                                                                                                               & (df[emotions[i-3]]==1)
+                                                                                                                                                               & (df[emotions[i-4]]==1)
+                                                                                                                                                               & (df[emotions[i-5]]==1)
+                                                                                                                                                               & (df[emotions[i-6]]==1)].shape[0]
+    return sent_dict
 
-st.markdown('Our text has multiple labels. These labels are the target variables. But we need to check how many of these sentiments we have per sentence. So we need to know the distribution of sentiments')
-st.pyplot(gen_plot)
+  st.pyplot(gen_plot)
