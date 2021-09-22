@@ -489,4 +489,27 @@ senti_plot_expemo = get_punc_plot('Express Emotion', 'Text')
 st.subheader('Punctuation Distribution in Express Emotion Class')
 st.pyplot(senti_plot_expemo)
 
+st.markdown("As we can say that when people express emotions, they use lot of periods, exclamation. While expressing emotions, people do often ask questions as well, so we can see quite some question marks.")
+st.subheader("Statistics of words in each Sentiment: ")
 
+def get_word_stats(sentiment):
+  sentim = df[df[sentiment]==1]
+  word_length = []
+
+  for i in range(greeting.shape[0]):
+    sent = sentim['clean_text'].values[i]
+
+    words = re.findall(r'\w+', sent)
+
+    word_length.append(len(words))
+    
+  min_words = np.min(word_length)
+  max_words = np.max(word_length)
+  mean_words = np.mean(word_length)
+  return min_words, max_words, mean_words
+
+greet_min_words, greet_max_words, greet_mean_words = get_word_stats('Greeting')
+st.write('Min number of words in sentence of Greeting class: ', greet_min_words)
+st.write('\n')
+st.write('Max number of words in sentence of Greeting class: ', greet_max_words)
+st.write('Mean of words in sentence of Greeting class: ', greet_mean_words)
