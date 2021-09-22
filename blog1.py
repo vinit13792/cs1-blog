@@ -640,8 +640,6 @@ def pos_vec(sentiment):
     
   return pos_vector
 
-pos_vector = pos_vec('Greeting')
-
 def plot_pos_dist(data):
   pos = dict(Counter(data))
 
@@ -657,9 +655,43 @@ def plot_pos_dist(data):
   plt.ylabel('Count')
   plt.title('Parts of Speech Count')
   return fig
-
-greet_pos = plot_pos_dist(pos_vector)
+st.write('\n')
+st.markdown('Parts of Speech Count of Greeting Class')
+greet_pos_vector = pos_vec('Greeting')
+greet_pos = plot_pos_dist(greet_pos_vector)
 st.pyplot(greet_pos)
+
+st.write('\n')
+st.markdown('Parts of Speech Count of Justification Class')
+justifn_pos_vector = pos_vec('Justification')
+justifn_pos = plot_pos_dist(justifn_pos_vector)
+st.pyplot(justifn_pos)
+
+st.write('\n')
+st.markdown('Parts of Speech Count of Rant Class')
+rant_pos_vector = pos_vec('Rant')
+rant_pos = plot_pos_dist(rant_pos_vector)
+st.pyplot(rant_pos)
+
+st.write('\n')
+st.markdown('Parts of Speech Count of Gratitude Class')
+grat_pos_vector = pos_vec('Gratitude')
+grat_pos = plot_pos_dist(grat_pos_vector)
+st.pyplot(grat_pos)
+
+st.write('\n')
+st.markdown('Parts of Speech Count of Other Class')
+other_pos_vector = pos_vec('Other')
+other_pos = plot_pos_dist(other_pos_vector)
+st.pyplot(other_pos)
+
+st.write('\n')
+st.markdown('Parts of Speech Count of Express Emotion Class')
+expemo_pos_vector = pos_vec('Express Emotion')
+expemo_pos = plot_pos_dist(expemo_pos_vector)
+st.pyplot(expemo_pos)
+st.write('\n')
+
 
 
 
