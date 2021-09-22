@@ -599,11 +599,67 @@ desc_list = ['coordinating conjunction','cardinal digit','determiner',"existenti
 pos_tab = pd.DataFrame()
 pos_tab['POS'] = pos_list
 pos_tab['Description'] = desc_list
+st.markdown("Following is the table all the parts of speech tagging available in NLTK and its description so we understand the nomenclatures correctly.")
 st.table(pos_tab)
 
 st.markdown("Now that we know what are parts of speech, and why they are important, let's see how they are distributed acrosss different sentiments in our dataset.")
 
+from nltk.corpus import stopwords
+import nltk
+from nltk.tokenize import word_tokenize, sent_tokenize
+nltk.download('stopwords')
+nltk.download('punkt')
+nltk.download('averaged_perceptron_tagger')
+stop_words = set(stopwords.words('english'))
 
+
+def pos_vec(sentiment):
+  sentim = df[df[sentiment]==1]
+  pos_vector = []
+
+  for i in range(sentim.shape[0]):
+
+    doc = sentim['Text'].values[i]
+
+    tokenized = sent_tokenize(doc)
+    for i in tokenized:
+
+      # Word tokenizers is used to find the words 
+      # and punctuation in a string
+      wordsList = nltk.word_tokenize(i)
+  
+      # removing stop words from wordList
+      wordsList = [w for w in wordsList if not w in stop_words] 
+  
+      #  Using a Tagger. Which is part-of-speech 
+      # tagger or POS-tagger. 
+      tagged = nltk.pos_tag(wordsList)
+  
+      for tag in tagged:
+        pos_vector.append(tag[1])
+    
+  return pos_vector
+
+pos_vector = pos_vec('Greeting')
+
+def plot_pos_dist(data):
+  pos = dict(Counter(data))
+
+  keys = list(pos.keys())
+  vals = list(pos.values())
+
+  fig = plt.figure(figsize=(20,5))
+  plt.bar(keys, vals, align='center', edgecolor='black')
+  
+  for i in range(len(vals)):
+    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.4))
+  plt.xlabel('Parts of Speech')
+  plt.ylabel('Count')
+  plt.title('Parts of Speech Count')
+  return fig
+
+greet_pos = plot_pos_dist(pos_vector)
+st.pyplot(greet_pos)
 
 
 
