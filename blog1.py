@@ -580,10 +580,10 @@ st.header("Distribution of Parts of Speech: ")
 st.markdown(""""These are the "building blocks" of the language. Think of them like the parts of a house. When we want to build a house, we use concrete to make the foundations or base. We use bricks to make the walls. We use window frames to make the windows, and door frames to make the doorways. And we use cement to join them all together. Each part of the house has its own job. And when we want to build a sentence, we use the different types of word.""")
 st.markdown("""There are 9 basic types of word, and they are called "parts of speech".""")
 st.markdown("""The most important parts of speech are the BIG FOUR, and the verb is the king of parts of speech. Here they are, each with an example and its basic "job":""")
-st.markdown("*verb (deliver - expresses action)")
-st.markdown("*noun (computer - expresses a thing)")
-st.markdown("*adjective (yellow - tells us more about a noun)")
-st.markdown("*adverb (quickly - tells us more about a verb)")
+st.markdown(" * verb (deliver - expresses action)")
+st.markdown(" * noun (computer - expresses a thing)")
+st.markdown(" * adjective (yellow - tells us more about a noun)")
+st.markdown(" * adverb (quickly - tells us more about a verb)")
 
 
 
