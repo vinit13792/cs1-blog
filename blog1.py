@@ -591,6 +591,17 @@ st.markdown(" * determiner (the - limits a noun)")
 st.markdown(" * conjunction (and - joins words)")
 st.markdown(" * interjection (ouch! - expresses feeling)")
 
+st.markdown("Now that we know what are parts of speech, and why they are important, let's see how they are distributed acrosss different sentiments in our dataset.")
+
+pos_list =  ['CC', 'CD','DT','EX','FW','IN','JJ','JJR','JJS','LS',"MD","NN","NNS","NNP","NNPS","PDT","POS","PRP","PRPS","RB","RBR","RBS","RP","TO","UH","VB","VBD","VBG","VBN","VBP","VBZ","WDT","WP","WP$","WRB"]
+desc_list = ['coordinating conjunction','cardinal digit','determiner',"existential there (like: “there is” … think of it like “there exists”)",'foreign word','preposition/subordinating conjunction',"adjective ‘big’","adjective, comparative ‘bigger’","adjective, superlative ‘biggest’","list marker 1","modal could, will","noun, singular ‘desk’","noun plural ‘desks’","proper noun, singular ‘Harrison’","proper noun, plural ‘Americans’","predeterminer ‘all the kids’","possessive ending parent‘s","personal pronoun I, he, she","possessive pronoun my, his, hers","adverb very, silently","adverb, comparative better","adverb, superlative best","particle give up","to go ‘to‘ the store","interjection errrrrrrrm","verb, base form take","verb, past tense took","verb, gerund/present participle taking","verb, past participle taken","verb, sing. present, non-3d take","verb, 3rd person sing. present takes","wh-determiner which","wh-pronoun who, what","possessive wh pronoun whose","wh-abverb where, when"]
+pos_tab = pd.DataFrame()
+pos_tab['POS'] = pos_list
+pos_tab['Description'] = desc_list
+st.table(pos_tab)
+
+
+
 
 
 
