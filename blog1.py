@@ -496,7 +496,7 @@ def get_word_stats(sentiment):
   sentim = df[df[sentiment]==1]
   word_length = []
 
-  for i in range(greeting.shape[0]):
+  for i in range(sentim.shape[0]):
     sent = sentim['clean_text'].values[i]
 
     words = re.findall(r'\w+', sent)
