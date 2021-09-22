@@ -692,7 +692,39 @@ expemo_pos = plot_pos_dist(expemo_pos_vector)
 st.pyplot(expemo_pos)
 st.write('\n')
 
+from wordcloud import WordCloud, STOPWORDS
+from PIL import Image
 
+def get_wordcloud(sentiment):
+  sentim = df[df[sentiment]==1]
+  comment_words = ''
+  stopwords = set(STOPWORDS)
+  
+  # iterate through the csv file
+  for val in tqdm(sentim['clean_text']):
+      
+      # typecaste each val to string
+      val = str(val)
+  
+      # split the value
+      tokens = val.split()
+      
+      # Converts each token into lowercase
+      for i in range(len(tokens)):
+          tokens[i] = tokens[i].lower()
+      
+      comment_words += " ".join(tokens)+" "
 
+  wordcloud = WordCloud(width = 2048, height = 1024,background_color ='black', stopwords = stopwords, min_font_size = 20).generate(comment_words)
+  
+  # plot the WordCloud image                       
+  fig = plt.figure(figsize = (10, 8), facecolor = None)
+  plt.imshow(wordcloud, interpolation='bilinear')
+  plt.axis("off")
+  plt.tight_layout(pad = 0)
+  return fig
+
+greet_wc = get_wordcloud('Greeting')
+st.pyplot(greet_wc)
 
 
