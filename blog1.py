@@ -512,7 +512,7 @@ def get_word_stats(sentiment):
   max_words = np.max(word_length)
   mean_words = np.mean(word_length)
   
-  return min_words, max_words, mean_words
+  return min_words, max_words, np.round(mean_words)
 
 greet_min_words, greet_max_words, greet_mean_words = get_word_stats('Greeting')
 min_dict['Greeting'] = greet_min_words
