@@ -9,3 +9,4 @@ prettytable
 xgboost==0.90
 googledrivedownloader
 nltk==3.2.5
+wordcloud==1.8.1
