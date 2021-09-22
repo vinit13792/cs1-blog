@@ -491,7 +491,8 @@ st.pyplot(senti_plot_expemo)
 
 st.markdown("As we can say that when people express emotions, they use lot of periods, exclamation. While expressing emotions, people do often ask questions as well, so we can see quite some question marks.")
 st.subheader("Statistics of words in each Sentiment: ")
-
+st.markdown("When we write something to someone, we often express it in a way we see fit. Some people are less expressive, and some people are more intune with their emotions so they know exactly what to say. And there are people who just say things without keeping in context of question being asked or topic of discussion")
+st.markdown('That being said, we will see how many words are spoken
 min_dict = dict()
 max_dict = dict()
 mean_dict = dict()
@@ -655,6 +656,8 @@ def plot_pos_dist(data):
   plt.ylabel('Count')
   plt.title('Parts of Speech Count')
   return fig
+            
+            
 st.write('\n')
 st.markdown('Parts of Speech Count of Greeting Class')
 greet_pos_vector = pos_vec('Greeting')
@@ -692,6 +695,7 @@ expemo_pos = plot_pos_dist(expemo_pos_vector)
 st.pyplot(expemo_pos)
 st.write('\n')
 
+            
 from wordcloud import WordCloud, STOPWORDS
 from PIL import Image
 
@@ -724,7 +728,65 @@ def get_wordcloud(sentiment):
   plt.tight_layout(pad = 0)
   return fig
 
+st.header("Inspecting most common words using Wordcloud per Sentiment: ")
+with st.echo(code_location='below'):
+     def get_wordcloud(sentiment):
+            sentim = df[df[sentiment]==1]
+            comment_words = ''
+            stopwords = set(STOPWORDS)
+  
+            # iterate through the csv file
+            for val in sentim['clean_text']:
+                 # typecaste each val to string
+                 val = str(val)
+  
+                  # split the value
+                  tokens = val.split()
+      
+                  # Converts each token into lowercase
+                  for i in range(len(tokens)):
+                         tokens[i] = tokens[i].lower()
+      
+                  comment_words += " ".join(tokens)+" "
+
+            wordcloud = WordCloud(width = 2048, height = 1024,background_color ='black', stopwords = stopwords, min_font_size = 20).generate(comment_words)
+  
+            # plot the WordCloud image                       
+            fig = plt.figure(figsize = (10, 8), facecolor = None)
+            plt.imshow(wordcloud, interpolation='bilinear')
+            plt.axis("off")
+            plt.tight_layout(pad = 0)
+            return fig
+            
 greet_wc = get_wordcloud('Greeting')
+st.subheader("Frequent words in the Greeting Class")
 st.pyplot(greet_wc)
+
+st.write('\n')
+justifn_wc = get_wordcloud('Justification')
+st.subheader("Frequent words in the Justification Class")
+st.pyplot(justifn_wc)
+
+st.write('\n')
+rant_wc = get_wordcloud('Rant')
+st.subheader("Frequent words in the Rant Class")
+st.pyplot(rant_wc)
+
+st.write('\n')
+grat_wc = get_wordcloud('Gratitude')
+st.subheader("Frequent words in the Gratitude Class")
+st.pyplot(grat_wc)
+            
+st.write('\n')
+other_wc = get_wordcloud('Other')
+st.subheader("Frequent words in the Other Class")
+st.pyplot(other_wc)
+
+st.write('\n')
+expemo_wc = get_wordcloud('Express Emotion')
+st.subheader("Frequent words in the Express Emotion Class")
+st.pyplot(expemo_wc)
+
+
 
 
