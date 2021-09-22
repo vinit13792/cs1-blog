@@ -701,7 +701,7 @@ def get_wordcloud(sentiment):
   stopwords = set(STOPWORDS)
   
   # iterate through the csv file
-  for val in tqdm(sentim['clean_text']):
+  for val in sentim['clean_text']:
       
       # typecaste each val to string
       val = str(val)
