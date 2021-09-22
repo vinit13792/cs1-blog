@@ -547,8 +547,8 @@ mean_dict['Express Emotion'] = expemo_mean_words
 
 @st.cache()
 def get_word_plots(dict_):
-  keys = dict_.keys()
-  vals = dict_.values()
+  keys = list(dict_.keys())
+  vals = list(dict_.values())
 
   fig = plt.figure(figsize=(20,5))
   plt.bar(keys, vals, align='center', edgecolor='black')
