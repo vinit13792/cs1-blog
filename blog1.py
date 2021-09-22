@@ -492,6 +492,11 @@ st.pyplot(senti_plot_expemo)
 st.markdown("As we can say that when people express emotions, they use lot of periods, exclamation. While expressing emotions, people do often ask questions as well, so we can see quite some question marks.")
 st.subheader("Statistics of words in each Sentiment: ")
 
+ min_dict = dict()
+ max_dict = dict()
+ mean_dict = dict()
+  
+@st.cache()
 def get_word_stats(sentiment):
   sentim = df[df[sentiment]==1]
   word_length = []
@@ -502,14 +507,69 @@ def get_word_stats(sentiment):
     words = re.findall(r'\w+', sent)
 
     word_length.append(len(words))
-    
+  
   min_words = np.min(word_length)
   max_words = np.max(word_length)
   mean_words = np.mean(word_length)
+  
   return min_words, max_words, mean_words
 
 greet_min_words, greet_max_words, greet_mean_words = get_word_stats('Greeting')
-st.write('Min number of words in sentence of Greeting class: ', greet_min_words)
+min_dict['Greeting'] = greet_min_words
+max_dict['Greeting'] = greet_max_words
+mean_dict['Greeting'] = greet_mean_words
+
+rant_min_words, rant_max_words, rant_mean_words = get_word_stats('Rant')
+min_dict['Rant'] = rant_min_words
+max_dict['Rant'] = rant_max_words
+mean_dict['Rant'] = rant_mean_words
+
+justifn_min_words, justifn_max_words, justifn_mean_words = get_word_stats('Justification')
+min_dict['Justification'] = justifn_min_words
+max_dict['Justification'] = justifn_max_words
+mean_dict['Justification'] = justifn_mean_words
+
+
+grat_min_words, grat_max_words, grat_mean_words = get_word_stats('Gratitude')
+min_dict['Gratitude'] = grat_min_words
+max_dict['Gratitude'] = grat_max_words
+mean_dict['Gratitude'] = grat_mean_words
+
+other_min_words, other_max_words, other_mean_words = get_word_stats('Other')
+min_dict['Other'] = other_min_words
+max_dict['Other'] = other_max_words
+mean_dict['Other'] = other_mean_words
+
+expemo_min_words, expemo_max_words, expemo_mean_words = get_word_stats('Express Emotion')
+min_dict['Express Emotion'] = expemo_min_words
+max_dict['Express Emotion'] = expemo_max_words
+mean_dict['Express Emotion'] = expemo_mean_words
+
+@st.cache()
+def get_word_plots(dict_):
+  keys = dict_.keys()
+  vals = dict_.values()
+
+  fig = plt.figure(figsize=(20,5))
+  plt.bar(keys, vals, align='center', edgecolor='black')
+  for i in range(len(vals)):
+    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.4))
+  plt.xlabel('Emotions')
+  plt.ylabel('Word Count')
+  plt.title('Word count across all sentiments')
+  return fig
+
+min_fig = get_word_plots(min_dict)
+st.markdown('Min Word Count across all sentiments')
+st.pyplot(min_fig)
 st.write('\n')
-st.write('Max number of words in sentence of Greeting class: ', greet_max_words)
-st.write('Mean of words in sentence of Greeting class: ', greet_mean_words)
+
+max_fig = get_word_plots(max_dict)
+st.markdown('Max Word Count across all sentiments')
+st.pyplot(max_fig)
+st.write('\n')
+
+mean_fig = get_word_plots(mean_dict)
+st.markdown('Mean Word Count across all sentiments')
+st.pyplot(mean_fig)
+st.write('\n')
