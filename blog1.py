@@ -496,7 +496,7 @@ min_dict = dict()
 max_dict = dict()
 mean_dict = dict()
   
-@st.cache
+
 def get_word_stats(sentiment):
   sentim = df[df[sentiment]==1]
   word_length = []
@@ -545,7 +545,7 @@ min_dict['Express Emotion'] = expemo_min_words
 max_dict['Express Emotion'] = expemo_max_words
 mean_dict['Express Emotion'] = expemo_mean_words
 
-@st.cache
+
 def get_word_plots(dict_):
   keys = list(dict_.keys())
   vals = list(dict_.values())
