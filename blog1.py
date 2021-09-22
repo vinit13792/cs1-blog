@@ -656,7 +656,41 @@ def plot_pos_dist(data):
   plt.ylabel('Count')
   plt.title('Parts of Speech Count')
   return fig
-            
+
+with st.echo(code_location='below'):
+  import nltk
+  from nltk.corpus import stopwords
+  from nltk.tokenize import word_tokenize, sent_tokenize
+  nltk.download('stopwords')
+  nltk.download('punkt')
+  nltk.download('averaged_perceptron_tagger')
+  stop_words = set(stopwords.words('english'))
+
+  def pos_vec(sentiment):
+    sentim = df[df[sentiment]==1]
+    pos_vector = []
+
+    for i in range(sentim.shape[0]):
+      doc = sentim['Text'].values[i]
+
+      tokenized = sent_tokenize(doc)
+      for i in tokenized:
+        
+        # Word tokenizers is used to find the words 
+        # and punctuation in a string
+        wordsList = nltk.word_tokenize(i)
+  
+        # removing stop words from wordList
+        wordsList = [w for w in wordsList if not w in stop_words] 
+  
+        #  Using a Tagger. Which is part-of-speech 
+        # tagger or POS-tagger. 
+        tagged = nltk.pos_tag(wordsList)
+  
+        for tag in tagged:
+            pos_vector.append(tag[1])
+    
+    return pos_vector
             
 st.write('\n')
 st.markdown('Parts of Speech Count of Greeting Class')
