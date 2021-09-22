@@ -492,9 +492,9 @@ st.pyplot(senti_plot_expemo)
 st.markdown("As we can say that when people express emotions, they use lot of periods, exclamation. While expressing emotions, people do often ask questions as well, so we can see quite some question marks.")
 st.subheader("Statistics of words in each Sentiment: ")
 
- min_dict = dict()
- max_dict = dict()
- mean_dict = dict()
+min_dict = dict()
+max_dict = dict()
+mean_dict = dict()
   
 @st.cache()
 def get_word_stats(sentiment):
