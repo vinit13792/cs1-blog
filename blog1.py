@@ -584,8 +584,12 @@ st.markdown(" * verb (deliver - expresses action)")
 st.markdown(" * noun (computer - expresses a thing)")
 st.markdown(" * adjective (yellow - tells us more about a noun)")
 st.markdown(" * adverb (quickly - tells us more about a verb)")
-
-
+st.markdown("The other parts of speech are mostly small words:")
+st.markdown(" * pronoun (it - replaces a noun)")
+st.markdown(" * preposition (on - links a noun to another word)")
+st.markdown(" * determiner (the - limits a noun)")
+st.markdown(" * conjunction (and - joins words)")
+st.markdown(" * interjection (ouch! - expresses feeling)")
 
 
 
