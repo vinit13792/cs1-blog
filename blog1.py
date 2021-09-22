@@ -729,6 +729,7 @@ def get_wordcloud(sentiment):
   return fig
 
 st.header("Inspecting most common words using Wordcloud per Sentiment: ")
+st.markdown("We need to see for ourself that which are the most common words used in our dataset. It shouldn't be that surprising since its a travel data, so most often words used could be related to travelling, flights, trains, reservations, bookings and so forth.")
 with st.echo(code_location='below'):
   def get_wordcloud(sentiment):
     sentim = df[df[sentiment]==1]
@@ -787,6 +788,34 @@ expemo_wc = get_wordcloud('Express Emotion')
 st.subheader("Frequent words in the Express Emotion Class")
 st.pyplot(expemo_wc)
 
+st.markdown("As I said it shouldn't be surprising to find travel related words more often even though the words associated to sentiments were less seen.")
+
+st.write('\n')
+st.markdown("On inspecting our dataset, I came to know that a lot of files do not have labels. So inorder to build model, we need only those datapoints which have labels. So lets remove the ones which do not have labels.")
+
+with st.echo(code_location='below'):
+  # Ref: https://stackoverflow.com/a/43421391/10632473
+  index_list = list(df[(df['Greeting']==0) & (df['Backstory']==0) & (df['Justification']==0) & (df['Rant']==0) & (df['Gratitude']==0) & (df['Other']==0) & (df['Express Emotion']==0)].index)
+  indexes_to_keep = set(range(df.shape[0])) - set(index_list)
+  df_sliced_multi = df.take(list(indexes_to_keep))
+
+st.markdown("Now we need to verify if those datapoints are removed which do not have labels. Verification is important else we would be giving just garbage to our model.")
+with st.echo(code_location='below'):
+  try:
+    df_sliced_multi.loc[index_list]
+  except KeyError:
+    print('Indexes doesnt not exist')
+    print('Indexes from index lists removed')
+    
+st.markdown("Now that we have verified that we have all the valid datapoints, let's split our dataset into 70% train and 30% test")
+with st.echo(code_location='below'):
+  from sklearn.model_selection import train_test_split
+  
+  X_multi = df_sliced_multi[[df_sliced_multi.columns[0]]]
+  y_multi = df_sliced_multi[df_sliced_multi.columns[1:-1]]
+  
+  X_train_multi, X_test_multi, y_train_multi, y_test_multi = train_test_split(X_multi, y_multi, test_size=0.33, random_state=42)
+  X_train_multi, X_cv_multi, y_train_multi, y_cv_multi = train_test_split(X_train_multi, y_train_multi, test_size=0.33, random_state=42)
 
 
 
