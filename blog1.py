@@ -840,7 +840,8 @@ with st.echo(code_location='below'):
   except KeyError:
     print('Indexes doesnt not exist')
     print('Indexes from index lists removed')
-    
+
+st.write('\n')
 st.markdown("Now that we have verified that we have all the valid datapoints, let's split our dataset into 70% train and 30% test")
 with st.echo(code_location='below'):
   from sklearn.model_selection import train_test_split
@@ -851,5 +852,7 @@ with st.echo(code_location='below'):
   X_train_multi, X_test_multi, y_train_multi, y_test_multi = train_test_split(X_multi, y_multi, test_size=0.33, random_state=42)
   X_train_multi, X_cv_multi, y_train_multi, y_cv_multi = train_test_split(X_train_multi, y_train_multi, test_size=0.33, random_state=42)
 
-
+st.write('\n')
+st.markdown("Till now we saw data cleaning, and data visualisation. Now we have reached at the most important part of the blog, Feature Engineering.")
+st.markdown("Feature Engineering is like the art and creative part of Machine Learning project. The more creative you get, tje ")
 
