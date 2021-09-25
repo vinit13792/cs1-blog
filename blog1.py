@@ -15,6 +15,7 @@ from sklearn.metrics import roc_curve, auc
 import joblib
 import os
 import pickle
+import zipfile
 plt.style.use('seaborn')
 
 
@@ -917,7 +918,8 @@ gdd.download_file_from_google_drive(file_id='1kFgT7fbdVeTYpi9HRTqgB-N6ROsYyuZ6',
                                     dest_path='/app/cs1-blog/data.zip',
                                     unzip=False)
 
-zipfiles = glob.glob("/app/cs1-blog/data.zip")
+
+zipfiles = glob.glob("/app/cs1-blog/*.zip")
 #st.write(zipfiles)
 for file in zipfiles:
     with zipfile.ZipFile(f'{file}', 'r') as zip_ref:
