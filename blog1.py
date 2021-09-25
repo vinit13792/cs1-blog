@@ -4,6 +4,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import nltk
+import glob
+
 from google_drive_downloader import GoogleDriveDownloader as gdd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -911,3 +913,17 @@ st.code(code_1, 'python')
 
 st.markdown("""As you can see synonym augmenter just replaces some words here and there without keeping the grammatical structure intact. It does make the sentence flawed the way any humans are, which makes it slightly authentic, but not entirely, although since we have less dataset and we need more data to train our model, so this works.""")
 
+gdd.download_file_from_google_drive(file_id='1kFgT7fbdVeTYpi9HRTqgB-N6ROsYyuZ6',
+                                    dest_path='/app/cs1-blog/data.zip',
+                                    unzip=False)
+
+zipfiles = glob.glob("/app/cs1-blog/data.zip")
+#st.write(zipfiles)
+for file in zipfiles:
+    with zipfile.ZipFile(f'{file}', 'r') as zip_ref:
+        zip_ref.extractall()
+text_multi = pickle.load(open("/data/text_multi.pkl", "rb"))
+labels_multi = pickle.load(open("/data/labels_multi.pkl", "rb"))
+
+syn_text_multi = pickle.load(open("/data/syn_text_multi.pkl", "rb"))
+syn_labels_multi = pickle.load(open("/data/syn_labels_multi.pkl", "rb"))
