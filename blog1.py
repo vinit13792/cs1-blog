@@ -861,7 +861,7 @@ st.markdown("Data Augmentation on text data is actually quite simple. You find t
 st.markdown("We will use a library called __nlpaug__ which uses bert model and different versions of bert to find and replace words.")
 st.markdown("We will use contextual word embeddings and synonym word augmenter to find and replace such words.")
 st.markdown("Let's see how this works from a code perspective")
-with st.echo(code_location='below'):
+code = """
   import nlpaug.augmenter.char as nac
   import nlpaug.augmenter.word as naw
   import nlpaug.augmenter.sentence as nas
@@ -878,9 +878,10 @@ with st.echo(code_location='below'):
   print("Augmented Text:")
   print(augmented_text)
 
-  #Output:
-  #Original:
-  #Does anyone know if there is a particular time of year when airlines tend to have good prices on airfare? We are going on a Carnival Cruise in June 2007 and want to find the best deal on airfare. Thanks!
-  #Augmented Text:
-  #does anyone know if there is a particular time of year when european airlines tend to quite have good prices on airfare? they we present are going her on a carnival cruise in her june with 2007 and want congratulations to find possibly the best deal on their airfare. thanks!
-
+  Output:
+  Original:
+  Does anyone know if there is a particular time of year when airlines tend to have good prices on airfare? We are going on a Carnival Cruise in June 2007 and want to find the best deal on airfare. Thanks!
+  Augmented Text:
+  does anyone know if there is a particular time of year when european airlines tend to quite have good prices on airfare? they we present are going her on a carnival cruise in her june with 2007 and want congratulations to find possibly the best deal on their airfare. thanks!
+  """
+st.code(code, language='python')
