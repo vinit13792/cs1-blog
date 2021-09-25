@@ -929,3 +929,227 @@ labels_multi = pickle.load(open("/app/cs1-blog/data/labels_multi.pkl", "rb"))
 
 syn_text_multi = pickle.load(open("/app/cs1-blog/data/syn_text_multi.pkl", "rb"))
 syn_labels_multi = pickle.load(open("/app/cs1-blog/data/syn_labels_multi.pkl", "rb"))
+
+y_dict = {cols[0]: syn_labels_multi[:,0], cols[1]:syn_labels_multi[:,1], cols[2]:syn_labels_multi[:,2], cols[3]:syn_labels_multi[:,3],
+          cols[4]:syn_labels_multi[:,4], cols[5]:syn_labels_multi[:,5], cols[6]:syn_labels_multi[:,6]}
+
+y_aug_dict = {cols[0]: labels_multi[:,0], cols[1]:labels_multi[:,1], cols[2]:labels_multi[:,2], cols[3]:labels_multi[:,3],
+          cols[4]:labels_multi[:,4], cols[5]:labels_multi[:,5], cols[6]:labels_multi[:,6]}
+
+y_syn_train = pd.DataFrame(y_dict, columns=cols)
+y_new_train = pd.DataFrame(y_aug_dict, columns=cols)
+
+y_new_train = y_new_train.append(y_syn_train)
+
+y_train_multi = y_train_multi.append(y_new_train)
+
+y_train_multi = y_train_multi.append(y_new_train)
+
+syn_dict_multi = {'Text':syn_text_multi}
+
+syn_df_multi = pd.DataFrame(syn_dict_multi.get('Text'))
+syn_df_multi.rename(columns={0:'Text'}, inplace=True)
+
+text_dict_multi = {'Text':text_multi}
+aug_df_multi = pd.DataFrame(text_dict_multi.get('Text'))
+aug_df_multi.rename(columns={0:'Text'}, inplace=True)
+
+X_train_multi = X_train_multi.append(aug_df_multi)
+X_train_multi = X_train_multi.append(syn_df_multi)
+
+
+st.write('\n')
+st.subheader("Word Count per Sentence:")
+st.markdown("Emotions are expressed in different way. Some emotions require less words, and some more. But it is really dependent on people how to explain, in few words or more words. Capturing this count of words per emotion or per multiple emotions will help us build a better model")
+
+def get_word_count(data, feature):
+    
+    counts = []
+    
+    for i in range(data[feature].shape[0]):
+        
+        text = data[feature].values[i]
+        pattern = r'[a-zA-Z]+'
+        
+        words = re.findall(pattern, text)
+        
+        counts.append(len(words))
+        
+    return counts
+  
+code_2 = """def get_word_count(data, feature):
+    
+    counts = []
+    
+    for i in range(data[feature].shape[0]):
+        
+        text = data[feature].values[i]
+        pattern = r'[a-zA-Z]+'
+        
+        words = re.findall(pattern, text)
+        
+        counts.append(len(words))
+        
+    return counts
+    
+    
+    word_counts_train = get_word_count(X_train_multi, 'Text')
+    word_counts_cv = get_word_count(X_cv_multi, 'Text')
+    word_counts_test = get_word_count(X_test_multi, 'Text')
+
+    X_train_multi['word_counts'] = word_counts_train
+    X_cv_multi['word_counts'] = word_counts_cv
+    X_test_multi['word_counts'] = word_counts_test"""
+st.code(code_2, 'python')
+
+word_counts_train = get_word_count(X_train_multi, 'Text')
+
+X_train_multi['word_counts'] = word_counts_train
+
+st.write('\n')
+st.subheader("Get the Number of particles, interjections, verbs, noun, pronoun, adverb, adjective:")
+
+import itertools
+
+def pos_count(data, feature):
+
+  POS_List = ['JJ', 'JJR', 'JJS', 'NN', 'NNS', 'PRP', 'PRPS', 'RB', 'RBR', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP','VBZ', 'WP', 'WP$']
+
+  pos_per_text = defaultdict(list)
+
+  for i in range(data.shape[0]):
+
+    doc = data['Text'].values[i]
+
+    info =[]
+    tokenized = sent_tokenize(doc)
+    for i in tokenized:
+
+      # Word tokenizers is used to find the words 
+      # and punctuation in a string
+      wordsList = nltk.word_tokenize(i)
+  
+      # removing stop words from wordList
+      wordsList = [w for w in wordsList if not w in stop_words] 
+  
+      #  Using a Tagger. Which is part-of-speech 
+      # tagger or POS-tagger. 
+      tagged = nltk.pos_tag(wordsList)
+      for tag in tagged:
+        info.append(tag[1])
+    
+    #print(info)
+    
+    
+    counts = Counter(info)
+    
+    keys = dict(counts).keys()
+    #print(list(keys))
+    #break
+    for pos in POS_List:
+      
+      if pos in list(keys):
+        
+        pos_per_text[pos].append(counts.get(pos))
+            
+      else:
+        pos_per_text[pos].append(0)
+      
+  return pos_per_text
+
+code_3 = """ def pos_count(data, feature):
+
+  POS_List = ['JJ', 'JJR', 'JJS', 'NN', 'NNS', 'PRP', 'PRPS', 'RB', 'RBR', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP','VBZ', 'WP', 'WP$']
+
+  pos_per_text = defaultdict(list)
+
+  for i in tqdm(range(data.shape[0])):
+
+    doc = data['Text'].values[i]
+
+    info =[]
+    tokenized = sent_tokenize(doc)
+    for i in tokenized:
+
+      # Word tokenizers is used to find the words 
+      # and punctuation in a string
+      wordsList = nltk.word_tokenize(i)
+  
+      # removing stop words from wordList
+      wordsList = [w for w in wordsList if not w in stop_words] 
+  
+      #  Using a Tagger. Which is part-of-speech 
+      # tagger or POS-tagger. 
+      tagged = nltk.pos_tag(wordsList)
+      for tag in tagged:
+        info.append(tag[1])
+    
+    #print(info)
+    
+    
+    counts = Counter(info)
+    
+    keys = dict(counts).keys()
+    #print(list(keys))
+    #break
+    for pos in POS_List:
+      
+      if pos in list(keys):
+        
+        pos_per_text[pos].append(counts.get(pos))
+            
+      else:
+        pos_per_text[pos].append(0)
+      
+  return pos_per_text 
+  
+parts_of_speech_counts_train_multi = pos_count(X_train_multi, 'Text')
+parts_of_speech_counts_cv_multi = pos_count(X_cv_multi, 'Text')
+parts_of_speech_counts_test_multi = pos_count(X_test_multi, 'Text')
+
+POS_List = ['JJ', 'JJR', 'JJS', 'NN', 'NNS', 'PRP', 'PRPS', 'RB', 'RBR', 'RP', 'UH', 'VB', 'VBD', 'VBG', 'VBN', 'VBP','VBZ', 'WP', 'WP$']
+
+for pos in POS_List:
+  X_train_multi[pos] = parts_of_speech_counts_train_multi.get(pos)
+  X_cv_multi[pos] = parts_of_speech_counts_cv_multi.get(pos)
+  X_test_multi[pos] = parts_of_speech_counts_test_multi.get(pos)
+  
+  """
+
+st.code(code_3, 'python')
+
+st.write('\n')
+st.subheader('Get Negations in a sentence')
+st.markdown("""Negations are words like not or contractions with 'nt. In simple words negative words are called as negations. We will create a 1 or 0 if a negative words exists in a sentence or not respectively. """)
+def check_negation(df):
+    
+    negex_ = []
+    
+    for i in tqdm(range(df.shape[0])):
+        sent = df['Text'].values[i].split()
+        if ('not' in sent) or ('never' in sent):
+            negex_.append(1)
+        else:
+            negex_.append(0)
+    return negex_
+
+code_4 = """ def check_negation(df):
+    
+    negex_ = []
+    
+    for i in tqdm(range(df.shape[0])):
+        sent = df['Text'].values[i].split()
+        if ('not' in sent) or ('never' in sent):
+            negex_.append(1)
+        else:
+            negex_.append(0)
+    return negex_
+    
+    X_train_multi['Negation'] = check_negation(X_train_multi)
+    X_cv_multi['Negation'] = check_negation(X_cv_multi)
+    X_test_multi['Negation'] = check_negation(X_test_multi)"""
+
+st.code(code_4, 'python')
+
+
+X_train_multi['Negation'] = check_negation(X_train_multi)
