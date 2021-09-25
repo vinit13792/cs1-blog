@@ -885,3 +885,29 @@ code = """
   does anyone know if there is a particular time of year when european airlines tend to quite have good prices on airfare? they we present are going her on a carnival cruise in her june with 2007 and want congratulations to find possibly the best deal on their airfare. thanks!
   """
 st.code(code, language='python')
+
+st.markdown("As you can see the contextual word embeddings keep the context and meaning of the sentence as it is, but add certain words like 'european' which add a new meaning, but at the same time didnt change what the original sentence meant. Similarly it changed other parts of the sentence as well.")
+st.write('\n')
+st.markdown("Let's look at synonym augmenter to see how it augments the sentence")
+code_1 = """import nltk
+nltk.download('wordnet')
+syn_aug = naw.SynonymAug(aug_src='wordnet')
+augmented_text = syn_aug.augment(text)
+augmented1 = syn_aug.augment(augmented_text)
+print("Original:")
+print(text)
+print("Augmented Text:")
+print(augmented_text)
+print(augmented1)
+
+Original:
+Does anyone know if there is a particular time of year when airlines tend to have good prices on airfare? We are going on a Carnival Cruise in June 2007 and want to find the best deal on airfare. Thanks!
+Augmented Text:
+Does anyone have it away if at that place is a special time of year when airlines tend to hold salutary terms on airfare? We are going on a Carnival Cruise in June 2007 and want to find the best deal on airfare. Thanks!
+Does anyone ingest it away if at that station be a special time of twelvemonth when airlines tend to bear salutary footing on airfare? We are going on a Carnival Cruise in June 2007 and want to find the best deal on airfare. Thanks
+
+"""
+st.code(code_1, 'python')
+
+st.markdown("""As you can see synonym augmenter just replaces some words here and there without keeping the grammatical structure intact. It does make the sentence flawed the way any humans are, which makes it slightly authentic, but not entirely, although since we have less dataset and we need more data to train our model, so this works.""")
+
