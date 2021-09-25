@@ -924,8 +924,8 @@ zipfiles = glob.glob("/app/cs1-blog/*.zip")
 for file in zipfiles:
     with zipfile.ZipFile(f'{file}', 'r') as zip_ref:
         zip_ref.extractall()
-text_multi = pickle.load(open("/data/text_multi.pkl", "rb"))
-labels_multi = pickle.load(open("/data/labels_multi.pkl", "rb"))
+text_multi = pickle.load(open("/app/cs1-blog/data/text_multi.pkl", "rb"))
+labels_multi = pickle.load(open("/app/cs1-blog/data/labels_multi.pkl", "rb"))
 
-syn_text_multi = pickle.load(open("/data/syn_text_multi.pkl", "rb"))
-syn_labels_multi = pickle.load(open("/data/syn_labels_multi.pkl", "rb"))
+syn_text_multi = pickle.load(open("/app/cs1-blog/data/syn_text_multi.pkl", "rb"))
+syn_labels_multi = pickle.load(open("/app/cs1-blog/data/syn_labels_multi.pkl", "rb"))
