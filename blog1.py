@@ -854,5 +854,33 @@ with st.echo(code_location='below'):
 
 st.write('\n')
 st.markdown("Till now we saw data cleaning, and data visualisation. Now we have reached at the most important part of the blog, Feature Engineering.")
-st.markdown("Feature Engineering is like the art and creative part of Machine Learning project. The more creative you get, tje ")
+st.markdown("Feature Engineering is like the art and creative part of a Machine Learning project. The more creative you get, the more features we get more descriptive our dataset becomes for our model. Although this does'nt hold true in all the cases.")
+st.header("Feature Engineering: ")
+st.subheader("Data Augmentation on Text Data:-")
+st.markdown("Data Augmentation on text data is actually quite simple. You find the words which has synonyms, replace that word without changing the meaning of the sentence.")
+st.markdown("We will use a library called __nlpaug__ which uses bert model and different versions of bert to find and replace words.")
+st.markdown("We will use contextual word embeddings and synonym word augmenter to find and replace such words.")
+st.markdown("Let's see how this works from a code perspective")
+with st.echo(code_location='below'):
+  import nlpaug.augmenter.char as nac
+  import nlpaug.augmenter.word as naw
+  import nlpaug.augmenter.sentence as nas
+  import nlpaug.flow as nafc
+
+  from nlpaug.util import Action
+  
+  
+  text = df_sliced_multi['Text'].values[20]
+  con_aug = naw.ContextualWordEmbsAug(model_path='bert-large-uncased', action="insert", device='cuda')
+  augmented_text = con_aug.augment(text)
+  print("Original:")
+  print(text)
+  print("Augmented Text:")
+  print(augmented_text)
+
+  Output:
+  Original:
+  Does anyone know if there is a particular time of year when airlines tend to have good prices on airfare? We are going on a Carnival Cruise in June 2007 and want to find the best deal on airfare. Thanks!
+  Augmented Text:
+  does anyone know if there is a particular time of year when european airlines tend to quite have good prices on airfare? they we present are going her on a carnival cruise in her june with 2007 and want congratulations to find possibly the best deal on their airfare. thanks!
 
