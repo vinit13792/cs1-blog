@@ -929,7 +929,8 @@ labels_multi = pickle.load(open("/app/cs1-blog/data/labels_multi.pkl", "rb"))
 
 syn_text_multi = pickle.load(open("/app/cs1-blog/data/syn_text_multi.pkl", "rb"))
 syn_labels_multi = pickle.load(open("/app/cs1-blog/data/syn_labels_multi.pkl", "rb"))
-cols = ['Greeting','Justification','Rant','Gratitude','Other','Express Emotion']
+
+cols = ['Greeting','Backstory','Justification','Rant','Gratitude','Other','Express Emotion']
 y_dict = {cols[0]: syn_labels_multi[:,0], cols[1]:syn_labels_multi[:,1], cols[2]:syn_labels_multi[:,2], cols[3]:syn_labels_multi[:,3],
           cols[4]:syn_labels_multi[:,4], cols[5]:syn_labels_multi[:,5], cols[6]:syn_labels_multi[:,6]}
 
@@ -1344,15 +1345,17 @@ st.markdown("TFIDF takes in account the less frequent occuring words, as well th
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def tfidf(train, feature, ngram_range, max_features, smooth_idf):
-    tfidf_model = TfidfVectorizer(min_df=10, ngram_range=ngram_range, max_features=max_features, smooth_idf=smooth_idf)    
-    tfidf_model.fit(train[feature].values)
-    #features = tfidf_model.get_feature_names()
-    train_tfidf = tfidf_model.transform(train[feature].values)
-    
-    return train_tfidf, tfidf_model
+gdd.download_file_from_google_drive(file_id='1KLIH1mhEKqCl4OymTOkl4ChG_b511TfD',
+                                    dest_path='/app/multi-sentiment-analysis/tf_model.sav',
+                                    unzip=False) # tfidf model fitted on training data
 
-train_tf, tf_model = tfidf(X_train_multi, 'clean_text', (1,4), 5000, True)
+
+def tfidf(train, feature, tfidf_mod):  
+    train_tfidf = tfidf_model.transform(train[feature].values)
+    return train_tfidf
+  
+tfidf_model = joblib.load('/app/multi-sentiment-analysis/tf_model.sav')
+train_tf = tfidf(X_train_multi, 'clean_text', tfidf_model)
 
 code_6 = """ from sklearn.feature_extraction.text import TfidfVectorizer
   def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
