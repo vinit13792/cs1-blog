@@ -1317,9 +1317,9 @@ def get_words_based_on_prob(words):
             word_list.add(words[i])
     return word_list
   
-  seed_words_prob_multi = get_words_based_on_prob(seed_words_multi)
+seed_words_prob_multi = get_words_based_on_prob(seed_words_multi)
   
-  def depth_1_syn(words):
+def depth_1_syn(words):
     
     synsets = []
     for word in words:
@@ -1345,7 +1345,7 @@ st.markdown("TFIDF takes in account the less frequent occuring words, as well th
 from sklearn.feature_extraction.text import TfidfVectorizer
 
 gdd.download_file_from_google_drive(file_id='1KLIH1mhEKqCl4OymTOkl4ChG_b511TfD',
-                                    dest_path='/app/multi-sentiment-analysis/tf_model.sav',
+                                    dest_path='/app/cs1-blog/tf_model.sav',
                                     unzip=False) # tfidf model fitted on training data
 
 
@@ -1353,11 +1353,12 @@ def tfidf(train, feature, tfidf_mod):
     train_tfidf = tfidf_model.transform(train[feature].values)
     return train_tfidf
   
-tfidf_model = joblib.load('/app/multi-sentiment-analysis/tf_model.sav')
+tfidf_model = joblib.load('/app/cs1-blog/tf_model.sav')
 train_tf = tfidf(X_train_multi, 'clean_text', tfidf_model)
 
-code_6 = """ from sklearn.feature_extraction.text import TfidfVectorizer
-  def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
+code_6 = """ 
+from sklearn.feature_extraction.text import TfidfVectorizer
+def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
     tfidf_model = TfidfVectorizer(min_df=10, ngram_range=ngram_range, max_features=max_features, smooth_idf=smooth_idf)
     print(f'Feature name: {feature}')
     print("Before Vectorization:-")
@@ -1382,8 +1383,188 @@ code_6 = """ from sklearn.feature_extraction.text import TfidfVectorizer
     print("-"*75)
     return train_tfidf, cv_tfidf, test_tfidf, tfidf_model
     
-    train_tf, cv_tf, test_tf, tf_model = tfidf(X_train_multi, X_cv_multi, X_test_multi, 'clean_text', (1,4), 5000, True)
+train_tf, cv_tf, test_tf, tf_model = tfidf(X_train_multi, X_cv_multi, X_test_multi, 'clean_text', (1,4), 5000, True)
     """
 
 st.code(code_6, 'python')
+
+st.write('\n')
+st.header("Getting Pattern Based Features")
+st.markdown("""The idea of our pattern-related features in which we proposed an approach that relies on Part of Speech tags (PoS-tags) to extract sarcastic patterns. We rely on PoS-Tag of words to extract similar patterns. However, instead of dividing words into two categories, we divide them into three:
+
+Referred to as EI, containing words which might have emotional content.
+A second one, referred to as “CI”, containing non emotional words whose content is important
+And a third one, referred to as “GFI”, containing the words whose grammatical function is important.
+If a word belongs to the first category, it is replaced by the corresponding expression shown in TABLE II along with its polarity (e.g., the word “good” would be replaced by POS-ADJECTIVE); if it belongs to the second, it is lemmatized and replaced by its lemma; and if it belongs to the third, it is replaced by the corresponding expression shown in TABLE II. """)
+
+gdd.download_file_from_google_drive(file_id='1zhqF3YfALiRN5Dkm-xkfMFTLPw2d7cts',
+                                    dest_path='/app/cs1-blog/pattern feat.png',
+                                    unzip=False)
+
+st.image('pattern feat.png')
+
+import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+def get_pos_vec(df, feature):
+  ci = ['CC', 'DT', 'EX', 'IN', 'MD', 'PDT', 'POS', 'RB', 'RBR', 'RBS', 'RP', 'TO', 'WDT', 'WP', 'WP$', 'WRB']
+  gfi = ['CD', 'FW', 'LS', 'NNP', 'NNPS', 'PRP', 'PRP$', 'SYM', 'UH']
+  ei = ['JJ', 'JJR','JJS','NN','NNS','VB','VBD','VBD','VBG','VBN','VBP','VBZ']
+  pos_cat = defaultdict(list)
+  
+  for i in range(df.shape[0]):
+
+    doc = df[feature].values[i]
+    pattern =[]
+    tokenized = sent_tokenize(doc)
+    for i in tokenized:
+
+      # Word tokenizers is used to find the words 
+      # and punctuation in a string
+      wordsList = nltk.word_tokenize(i)
+  
+      # removing stop words from wordList
+      wordsList = [w for w in wordsList if not w in stop_words] 
+  
+      #  Using a Tagger. Which is part-of-speech 
+      # tagger or POS-tagger. 
+      tagged = nltk.pos_tag(wordsList)
+
+      for tag in tagged:
+        pattern.append(tag[1]) 
+    
+    
+    pat_check_ci = [pat for pat in pattern if pat in ci]
+    pat_check_ei = [pat for pat in pattern if pat in ei]
+    pat_check_gfi = [pat for pat in pattern if pat in gfi]
+    #print('-----')
+    #print(pat_check_ci, 'ci')
+    #print(pat_check_gfi, 'gfi')
+    #print(pat_check_ei, 'ei')
+    
+    if (len(pat_check_ci)!=0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(1)
+    elif (len(pat_check_ci)==0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(0)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(1)
+    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(0)
+      pos_cat['GFI'].append(1)
+    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)==0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(0)
+    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)==0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(0)
+      pos_cat['GFI'].append(0)
+    elif (len(pat_check_ci)==0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(0)
+      pos_cat['EI'].append(0)
+      pos_cat['GFI'].append(1)
+    else:
+      pos_cat['CI'].append(0)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(0)
+
+  return pos_cat
+
+train_pos_cat_multi = get_pos_vec(X_train_multi, 'Text')
+X_train_multi['CI'] = train_pos_cat_multi.get('CI')
+X_train_multi['GFI'] = train_pos_cat_multi.get('GFI')
+X_train_multi['EI'] = train_pos_cat_multi.get('EI')
+
+code_7 = """ import nltk
+from nltk.corpus import stopwords
+from nltk.tokenize import word_tokenize, sent_tokenize
+
+def get_pos_vec(df, feature):
+  ci = ['CC', 'DT', 'EX', 'IN', 'MD', 'PDT', 'POS', 'RB', 'RBR', 'RBS', 'RP', 'TO', 'WDT', 'WP', 'WP$', 'WRB']
+  gfi = ['CD', 'FW', 'LS', 'NNP', 'NNPS', 'PRP', 'PRP$', 'SYM', 'UH']
+  ei = ['JJ', 'JJR','JJS','NN','NNS','VB','VBD','VBD','VBG','VBN','VBP','VBZ']
+  pos_cat = defaultdict(list)
+  
+  for i in range(df.shape[0]):
+
+    doc = df[feature].values[i]
+    pattern =[]
+    tokenized = sent_tokenize(doc)
+    for i in tokenized:
+
+      # Word tokenizers is used to find the words 
+      # and punctuation in a string
+      wordsList = nltk.word_tokenize(i)
+  
+      # removing stop words from wordList
+      wordsList = [w for w in wordsList if not w in stop_words] 
+  
+      #  Using a Tagger. Which is part-of-speech 
+      # tagger or POS-tagger. 
+      tagged = nltk.pos_tag(wordsList)
+
+      for tag in tagged:
+        pattern.append(tag[1]) 
+    
+    
+    pat_check_ci = [pat for pat in pattern if pat in ci]
+    pat_check_ei = [pat for pat in pattern if pat in ei]
+    pat_check_gfi = [pat for pat in pattern if pat in gfi]
+    #print('-----')
+    #print(pat_check_ci, 'ci')
+    #print(pat_check_gfi, 'gfi')
+    #print(pat_check_ei, 'ei')
+    
+    if (len(pat_check_ci)!=0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(1)
+    elif (len(pat_check_ci)==0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(0)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(1)
+    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(0)
+      pos_cat['GFI'].append(1)
+    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)==0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(0)
+    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)==0):
+      pos_cat['CI'].append(1)
+      pos_cat['EI'].append(0)
+      pos_cat['GFI'].append(0)
+    elif (len(pat_check_ci)==0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)!=0):
+      pos_cat['CI'].append(0)
+      pos_cat['EI'].append(0)
+      pos_cat['GFI'].append(1)
+    else:
+      pos_cat['CI'].append(0)
+      pos_cat['EI'].append(1)
+      pos_cat['GFI'].append(0)
+
+  return pos_cat
+  
+train_pos_cat_multi = get_pos_vec(X_train_multi, 'Text')
+X_train_multi['CI'] = train_pos_cat_multi.get('CI')
+X_train_multi['GFI'] = train_pos_cat_multi.get('GFI')
+X_train_multi['EI'] = train_pos_cat_multi.get('EI')
+
+cv_pos_cat_multi = get_pos_vec(X_cv_multi, 'Text')
+X_cv_multi['CI'] = cv_pos_cat_multi.get('CI')
+X_cv_multi['GFI'] = cv_pos_cat_multi.get('GFI')
+X_cv_multi['EI'] = cv_pos_cat_multi.get('EI')
+
+test_pos_cat = get_pos_vec(X_test, 'Text')
+X_test['CI'] = test_pos_cat.get('CI')
+X_test['GFI'] = test_pos_cat.get('GFI')
+X_test['EI'] = test_pos_cat.get('EI')
+
+
+"""
 
