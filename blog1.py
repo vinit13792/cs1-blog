@@ -1344,7 +1344,7 @@ st.markdown("TFIDF takes in account the less frequent occuring words, as well th
 
 from sklearn.feature_extraction.text import TfidfVectorizer
 
-def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
+def tfidf(train, feature, ngram_range, max_features, smooth_idf):
     tfidf_model = TfidfVectorizer(min_df=10, ngram_range=ngram_range, max_features=max_features, smooth_idf=smooth_idf)    
     tfidf_model.fit(train[feature].values)
     #features = tfidf_model.get_feature_names()
@@ -1352,7 +1352,7 @@ def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
     cv_tfidf = tfidf_model.transform(cv[feature].values)
     test_tfidf = tfidf_model.transform(test[feature].values)
     
-    return train_tfidf, cv_tfidf, test_tfidf, tfidf_model
+    return train_tfidf, tfidf_model
 
 train_tf, tf_model = tfidf(X_train_multi 'clean_text', (1,4), 5000, True)
 
