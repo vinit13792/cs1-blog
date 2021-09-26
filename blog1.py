@@ -1568,3 +1568,141 @@ X_test['EI'] = test_pos_cat.get('EI')
 
 """
 
+st.write('\n')
+
+st.header("Building Dictionary for Converting Text-To-Sequences")
+st.markdown("When we convert a sentence to a sequence, we convert words to a series of numbers. But a model cannot do that on its own. We need to encode each word to a corresponding unique words, and then based on those unique words, we will construct a datapoint which will correspond to a sentence.")
+st.markdown("We will use all the words in our synsnets to construct this.")
+
+code_8 = """
+
+wordcloud_backstory = set(comment_words_backstory.split())
+wordcloud_expemo = set(comment_words_expemo.split())
+wordcloud_gratitude = set(comment_words_gratitude.split())
+wordcloud_greetings = set(comment_words_greetings.split())
+wordcloud_justifn = set(comment_words_justifn.split())
+wordcloud_rant = set(comment_words_rant.split())
+wordcloud_other = set(comment_words_other.split())
+
+vocab_multi = synsets_d1_multi.union(synsets_d2_multi.union(synsets_d3_multi.union(synsets_d4_multi)))
+
+wordclouds = {'backstory':wordcloud_backstory, 'Express Emotion':wordcloud_expemo,'Gratitude':wordcloud_gratitude,
+              'Greeting':wordcloud_gratitude, 'Justification':wordcloud_justifn,'Rant':wordcloud_rant,
+              'Other':wordcloud_other}
+synset_dict_multi={'synsets_d1':synsets_d1_multi, 'synsets_d2':synsets_d2_multi,'synsets_d3':synsets_d3_multi,'synsets_d4':synsets_d4_multi}
+
+def get_unigram_features(voc, sentiments_cloud,synsets, df):
+
+  int1 = voc.intersection(sentiments_cloud.get('backstory'))
+  int2 = voc.intersection(sentiments_cloud.get('Express Emotion'))
+  int3 = voc.intersection(sentiments_cloud.get('Greeting'))
+  int4 = voc.intersection(sentiments_cloud.get('Justification'))
+  int5 = voc.intersection(sentiments_cloud.get('Rant'))
+  int6 = voc.intersection(sentiments_cloud.get('Gratitude'))
+  int7 = voc.intersection(sentiments_cloud.get('Other'))
+  unigrams = set()
+  for row in range(df.shape[0]):
+
+    doc = df['clean_text'].values[row].split()
+
+    for word in doc:
+
+      if word in voc:
+
+        if (word in int1) or (word in int2) or (word in int3) or (word in int4) or (word in int5) or (word in int6) or (word in int7):
+
+          unigrams.add(word)
+
+  return unigrams
+  
+unigram_feat_multi = get_unigram_features(vocab_multi, wordclouds, synset_dict_multi, X_train_multi)
+
+
+def get_word_dict(unigram_feat_multi):
+  puncs = [i for i in string.punctuation]
+  unigram_feat_multi = puncs + list(unigram_feat_multi)
+  dictionary_multi = list(unigram_feat_multi)
+
+  word_index_multi= dict()
+
+  for i in range(len(dictionary_multi)):
+    if i==0:
+       word_index_multi['OOV'] = 1
+    else:
+        word_index_multi[dictionary_multi[i]]=i+1
+  return word_index_multi
+
+word_ind_multi = get_word_dict(unigram_feat_multi)
+"""
+
+st.write('\n')
+
+st.header("Converting Text-to-Sequences")
+st.markdown("Now we need to convert the text into a sequence since our model cannot understand words, it needs to see numbers. That's how models work. So let's give it what it needs.")
+
+code_9 = """
+
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+def find_max_len(df):
+  length = []
+  for i in tqdm(range(df.shape[0])):
+    text = re.findall(r'[a-zA-Z]+', df['clean_text'].values[i])
+
+    length.append(len(text))
+
+  return length
+  
+length_words_multi = find_max_len(X_train_multi)
+
+maxlen = int(np.percentile(length_words_multi, 99))
+
+maxlen = int(np.percentile(length_words_multi, 99))
+
+train_array_multi = text_to_seq(word_index_multi, X_train_multi)
+train_array_multi = pad_sequences(train_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
+
+cv_array_multi = text_to_seq(word_index_multi, X_cv_multi)
+cv_array_multi = pad_sequences(cv_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
+
+test_array_multi = text_to_seq(word_index_multi, X_test_multi)
+test_array_multi = pad_sequences(test_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
+
+def text_to_seq(vocab, data):
+
+  sequences = []
+  for i in tqdm(range(data.shape[0])):
+    text = re.findall(r'[a-zA-Z]+|\~|\!|\@|\#|\$|\%|\^|\&|\*|\(|\)|\-\+|\,|\"|\?|\.|\:|\;|\=|\[|\]|\{|\}|\_|\\|\/', data['Text'].values[i])
+    seq = []
+    for i in text:
+      if vocab.get(i)==None:
+        seq.append(1)
+      else:
+        seq.append(vocab.get(i))
+    sequences.append(seq)
+
+  return np.array(sequences)
+
+
+"""
+
+st.write('\n')
+
+st.header("Getting everything at one place")
+st.markdown("Now that we have engineered all the required features, lets get everything in an array to make it ready for model building.")
+
+code_10 = """
+X_train_multi.drop('clean_text', axis=1, inplace=True)
+X_cv_multi.drop('clean_text', axis=1, inplace=True)
+X_test_multi.drop('clean_text', axis=1, inplace=True)
+keep_columns = list(X_train_multi.columns[1:])
+
+train_cols_multi = X_train_multi[keep_columns].values
+cv_cols_multi = X_cv_multi[keep_columns].values
+test_cols_multi = X_test_multi[keep_columns].values
+
+train_multi = np.hstack((train_array_multi, train_tf.toarray(), train_cols_multi))
+cv_multi = np.hstack((cv_array_multi, cv_tf.toarray(), cv_cols_multi))
+test_multi = np.hstack((test_array_multi, test_tf.toarray(), test_cols_multi))
+
+"""
