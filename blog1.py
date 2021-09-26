@@ -929,7 +929,7 @@ labels_multi = pickle.load(open("/app/cs1-blog/data/labels_multi.pkl", "rb"))
 
 syn_text_multi = pickle.load(open("/app/cs1-blog/data/syn_text_multi.pkl", "rb"))
 syn_labels_multi = pickle.load(open("/app/cs1-blog/data/syn_labels_multi.pkl", "rb"))
-
+cols = ['Greeting','Justification','Rant','Gratitude','Other','Express Emotion']
 y_dict = {cols[0]: syn_labels_multi[:,0], cols[1]:syn_labels_multi[:,1], cols[2]:syn_labels_multi[:,2], cols[3]:syn_labels_multi[:,3],
           cols[4]:syn_labels_multi[:,4], cols[5]:syn_labels_multi[:,5], cols[6]:syn_labels_multi[:,6]}
 
@@ -1153,3 +1153,237 @@ st.code(code_4, 'python')
 
 
 X_train_multi['Negation'] = check_negation(X_train_multi)
+
+st.header("Getting unigrams from Synonyms, Hyponyms, WordNet")
+st.markdown("We get unigrams when we get each word as feature and create a one hot encoded vector. Then we get synonyms of these unigrams this is Depth level 1 of synonyms. When we find synonyms of these Depth level 1, we get Depth level 2 words, these are called hyponyms. We get these synonyms of various depths using wordnet.")
+
+import nltk
+nltk.download('wordnet')
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from nltk.corpus import wordnet as wn
+
+train_clean_multi = clean_text(X_train_multi, 'Text')
+X_train_multi['clean_text'] = train_clean_multi
+
+def get_seed_words(data, feature):
+    
+    pos_type = ['NN', 'NNS', 'PRP', 'PRPS', 'RB', 'RBR','RBS', 'VB', 'VBD', 'VBG', 'VBN', 'VBP','VBZ']
+    
+    seed_words = []
+    
+    for i in range(data.shape[0]):
+        
+        doc = data[feature].values[i]
+        info =[]
+        tokenized = sent_tokenize(doc)
+        for i in tokenized:
+
+          # Word tokenizers is used to find the words 
+          # and punctuation in a string
+          wordsList = nltk.word_tokenize(i)
+  
+          # removing stop words from wordList
+          wordsList = [w for w in wordsList if not w in stop_words] 
+  
+          #  Using a Tagger. Which is part-of-speech 
+          # tagger or POS-tagger. 
+          tagged = nltk.pos_tag(wordsList)
+        
+        for tag in tagged:
+
+          if tag[1] in pos_type:
+
+            seed_words.append(tag[0])
+    return seed_words
+
+seed_words_multi = get_seed_words(X_train_multi, 'clean_text')
+
+def get_words_based_on_prob(words):
+    
+    word_list = set()
+    sid_obj = SentimentIntensityAnalyzer()
+    
+    for i in range(len(words)):
+        
+        scores = sid_obj.polarity_scores(words[i])
+        
+        if scores.get('compound')>0.5 or scores.get('compound')<-0.5:
+            
+            word_list.add(words[i])
+    return word_list
+  
+seed_words_prob_multi = get_words_based_on_prob(seed_words_multi)
+def depth_1_syn(words):
+    
+    synsets = []
+    for word in words:
+        for s in wn.synsets(word):
+            synsets.append(s.hyponyms())
+    
+    words = []
+    for s in synsets:
+        t1 = re.findall(r"\b([a-zA-Z]+)\b", str(s))
+        for temp in t1:
+            if len(temp)>1 and temp!='Synset':
+                words.append(temp)
+    return set(words)
+  
+synsets_d1_multi = depth_1_syn(seed_words_prob_multi)
+synsets_d2_multi = depth_1_syn(synsets_d1_multi)
+synsets_d3_multi = depth_1_syn(synsets_d2_multi)
+synsets_d4_multi = depth_1_syn(synsets_d3_multi)
+
+word_depth_multi = dict()
+
+word_depth_multi['Seed Words']       = len(seed_words_prob_multi)
+word_depth_multi['Synsets Depth 1']  = len(synsets_d1_multi)
+word_depth_multi['Synsets Depth 2']  = len(synsets_d2_multi)
+word_depth_multi['Synsets Depth 3']  = len(synsets_d3_multi)
+word_depth_multi['Synsets Depth 4']  = len(synsets_d4_multi)
+
+
+def get_synset_plot(word_depth):
+  # https://www.geeksforgeeks.org/adding-value-labels-on-a-matplotlib-bar-chart/
+
+  keys = list(word_depth.keys())
+  vals = list(word_depth.values())
+
+  fig = plt.figure(figsize=(20,5))
+  plt.bar(keys, vals, align='center', edgecolor='black')
+
+  for i in range(len(vals)):
+    plt.text(i, vals[i], vals[i], ha='center', Bbox = dict(facecolor = 'indianred', alpha =.8))
+  plt.xlabel('Unigrams')
+  plt.ylabel('Count')
+  plt.title('Unigram Count')
+  return fig
+
+synset_fig = get_synset_plot(word_depth_multi)
+st.pyplot(synset_fig)
+
+
+code_5 = """ 
+import nltk
+nltk.download('wordnet')
+from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
+from nltk.corpus import wordnet as wn
+
+train_clean_multi = clean_text(X_train_multi, 'Text')
+X_train_multi['clean_text'] = train_clean_multi
+
+def get_seed_words(data, feature):
+    
+    pos_type = ['NN', 'NNS', 'PRP', 'PRPS', 'RB', 'RBR','RBS', 'VB', 'VBD', 'VBG', 'VBN', 'VBP','VBZ']
+    
+    seed_words = []
+    
+    for i in range(data.shape[0]):
+        
+        doc = data[feature].values[i]
+        info =[]
+        tokenized = sent_tokenize(doc)
+        for i in tokenized:
+
+          # Word tokenizers is used to find the words 
+          # and punctuation in a string
+          wordsList = nltk.word_tokenize(i)
+  
+          # removing stop words from wordList
+          wordsList = [w for w in wordsList if not w in stop_words] 
+  
+          #  Using a Tagger. Which is part-of-speech 
+          # tagger or POS-tagger. 
+          tagged = nltk.pos_tag(wordsList)
+        
+        for tag in tagged:
+
+          if tag[1] in pos_type:
+
+            seed_words.append(tag[0])
+    return seed_words
+
+seed_words_multi = get_seed_words(X_train_multi, 'clean_text')
+
+def get_words_based_on_prob(words):
+    
+    word_list = set()
+    sid_obj = SentimentIntensityAnalyzer()
+    
+    for i in range(len(words)):
+        
+        scores = sid_obj.polarity_scores(words[i])
+        
+        if scores.get('compound')>0.5 or scores.get('compound')<-0.5:
+            
+            word_list.add(words[i])
+    return word_list
+  
+  seed_words_prob_multi = get_words_based_on_prob(seed_words_multi)
+  
+  def depth_1_syn(words):
+    
+    synsets = []
+    for word in words:
+        for s in wn.synsets(word):
+            synsets.append(s.hyponyms())
+    
+    words = []
+    for s in synsets:
+        t1 = re.findall(r"\b([a-zA-Z]+)\b", str(s))
+        for temp in t1:
+            if len(temp)>1 and temp!='Synset':
+                words.append(temp)
+    return set(words)
+ """
+
+st.code(code_5, 'python')
+
+st.write('\n')
+st.header("Getting the words using TFIDF Vectorizer")
+st.markdown("TFIDF takes in account the less frequent occuring words, as well the more frequent occuring words in such a way that less frequently occuring words gets more importance and more frequent words gets less importance, effectively getting log probabilities.")
+
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
+    tfidf_model = TfidfVectorizer(min_df=10, ngram_range=ngram_range, max_features=max_features, smooth_idf=smooth_idf)    
+    tfidf_model.fit(train[feature].values)
+    #features = tfidf_model.get_feature_names()
+    train_tfidf = tfidf_model.transform(train[feature].values)
+    cv_tfidf = tfidf_model.transform(cv[feature].values)
+    test_tfidf = tfidf_model.transform(test[feature].values)
+    
+    return train_tfidf, cv_tfidf, test_tfidf, tfidf_model
+
+train_tf, tf_model = tfidf(X_train_multi 'clean_text', (1,4), 5000, True)
+
+code_6 = """ from sklearn.feature_extraction.text import TfidfVectorizer
+  def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
+    tfidf_model = TfidfVectorizer(min_df=10, ngram_range=ngram_range, max_features=max_features, smooth_idf=smooth_idf)
+    print(f'Feature name: {feature}')
+    print("Before Vectorization:-")
+    print(f'Shape of our training data: {train.shape}')
+    print(f'Shape of our cross-validation data: {cv.shape}')   
+    print(f'Shape of our test data: {test.shape}')
+    print("-"*75)
+    print(f'Initialised TFIDF model')
+    print(f'\nVectorizing Data....')
+    
+    tfidf_model.fit(train[feature].values)
+    #features = tfidf_model.get_feature_names()
+    train_tfidf = tfidf_model.transform(train[feature].values)
+    cv_tfidf = tfidf_model.transform(cv[feature].values)
+    test_tfidf = tfidf_model.transform(test[feature].values)
+    print(f'\nVectorizing Complete!')
+    
+    print("\nAfter Vectorization:-")
+    print(f'Shape of our training data: {train_tfidf.shape}')
+    print(f'Shape of our cross-validation data: {cv_tfidf.shape}')   
+    print(f'Shape of our test data: {test_tfidf.shape}')
+    print("-"*75)
+    return train_tfidf, cv_tfidf, test_tfidf, tfidf_model
+    
+    train_tf, cv_tf, test_tf, tf_model = tfidf(X_train_multi, X_cv_multi, X_test_multi, 'clean_text', (1,4), 5000, True)
+    """
+
+st.code(code_6, 'python')
+
