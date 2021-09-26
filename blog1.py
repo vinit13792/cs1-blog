@@ -1260,8 +1260,6 @@ def get_synset_plot(word_depth):
   return fig
 
 synset_fig = get_synset_plot(word_depth_multi)
-st.pyplot(synset_fig)
-
 
 code_5 = """ 
 import nltk
@@ -1338,6 +1336,7 @@ def get_words_based_on_prob(words):
  """
 
 st.code(code_5, 'python')
+st.pyplot(synset_fig)
 
 st.write('\n')
 st.header("Getting the words using TFIDF Vectorizer")
