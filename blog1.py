@@ -1126,7 +1126,7 @@ def check_negation(df):
     
     negex_ = []
     
-    for i in tqdm(range(df.shape[0])):
+    for i in range(df.shape[0]):
         sent = df['Text'].values[i].split()
         if ('not' in sent) or ('never' in sent):
             negex_.append(1)
