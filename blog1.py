@@ -1349,12 +1349,10 @@ def tfidf(train, feature, ngram_range, max_features, smooth_idf):
     tfidf_model.fit(train[feature].values)
     #features = tfidf_model.get_feature_names()
     train_tfidf = tfidf_model.transform(train[feature].values)
-    cv_tfidf = tfidf_model.transform(cv[feature].values)
-    test_tfidf = tfidf_model.transform(test[feature].values)
     
     return train_tfidf, tfidf_model
 
-train_tf, tf_model = tfidf(X_train_multi 'clean_text', (1,4), 5000, True)
+train_tf, tf_model = tfidf(X_train_multi, 'clean_text', (1,4), 5000, True)
 
 code_6 = """ from sklearn.feature_extraction.text import TfidfVectorizer
   def tfidf(train, cv, test, feature, ngram_range, max_features, smooth_idf):
