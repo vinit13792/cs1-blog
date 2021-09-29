@@ -1652,21 +1652,6 @@ def find_max_len(df):
     length.append(len(text))
 
   return length
-  
-length_words_multi = find_max_len(X_train_multi)
-
-maxlen = int(np.percentile(length_words_multi, 99))
-
-maxlen = int(np.percentile(length_words_multi, 99))
-
-train_array_multi = text_to_seq(word_index_multi, X_train_multi)
-train_array_multi = pad_sequences(train_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
-
-cv_array_multi = text_to_seq(word_index_multi, X_cv_multi)
-cv_array_multi = pad_sequences(cv_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
-
-test_array_multi = text_to_seq(word_index_multi, X_test_multi)
-test_array_multi = pad_sequences(test_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
 
 def text_to_seq(vocab, data):
 
@@ -1682,6 +1667,21 @@ def text_to_seq(vocab, data):
     sequences.append(seq)
 
   return np.array(sequences)
+
+length_words_multi = find_max_len(X_train_multi)
+
+maxlen = int(np.percentile(length_words_multi, 99))
+
+maxlen = int(np.percentile(length_words_multi, 99))
+
+train_array_multi = text_to_seq(word_index_multi, X_train_multi)
+train_array_multi = pad_sequences(train_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
+
+cv_array_multi = text_to_seq(word_index_multi, X_cv_multi)
+cv_array_multi = pad_sequences(cv_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
+
+test_array_multi = text_to_seq(word_index_multi, X_test_multi)
+test_array_multi = pad_sequences(test_array_multi, maxlen=maxlen, dtype='int32', padding='pre',truncating='post')
 
 
 """
@@ -1707,8 +1707,58 @@ test_multi = np.hstack((test_array_multi, test_tf.toarray(), test_cols_multi))
 
 """
 st.code(code_10, 'python')
+st.write('\n')
+
+st.header("Building and evaluating ML models: ")
+st.markdown(""" We will now build a ML model, to be precise a stacking classifier for our problem. In stacking classifier we build multiple models, and their output is given to a metaclassifier which will then output. This approach improves the model predictions, but with that we get flexibility of choosing which models we choose to stack.""")
+st.subheader("Why stacking and why not a single classifier?")
+st.markdown("""In my experiments, I got to know that single classifiers require MultiOutput Classifier to wrap around them to able to train and predcit. This method is not that flexible with regards to calibration and the model predictions are below average at the best. Models like Random Forest has multioutput inbuilt with them but even their predictions were below average.""")
+st.markdown("""This is the reason why I chose Stacking Classifier per class. That way we will solving binary classification problem, and training and development process becomes much easier. Above all calibrating binary classifier is trivial and fast with new sklearn as it provides parallel processing. """)
+st.subheader("""How to ingest data for stacking classifier? """)
+st.markdown("""Well, we cannot give the entire data for stacking, so here's how we will split the data for stacking classifier. 
+1. Split the data into 50-50 with stratified sampling.
+2. Randomly sample the dataset such that we get equal indices in each of the set. For e.g. if we want to randomly sample 5 sets, then these 5 sets should have equal number of datapoints.
+3. We will train these sets individually using five different models by calibrating them. These calibrated models are then used against the other 50% of the dataset and evaluated.
+4. Say for example we are training 6 models, we will train 6 models with calibration, get its probability predictions and train a metaclassifier. This metaclassifier is also calibrated for probabilities.""")
+st.subheader("Splitting the dataset")
+st.markdown("Since we have too many features and we want to train faster at the same time get accurate results, we will used statistical methods like chi-squared test and selectkbest to reduce the number of features. This will calculate how our features and labels are independent of each other, with small values will translate to our labels being independent and large values will translate to feature being important for us as it will provide value to our model.")
+
+code_11 = """
+from sklearn.feature_selection import chi2, SelectKBest
+
+select_k = SelectKBest(chi2, k=int(train_norm_multi.shape[1]/2))
+select_k.fit(train_norm_multi, y_train_multi)
+
+train_new = select_k.transform(train_norm_multi)
+
+cv_new = select_k.transform(cv_norm_multi)
+
+test_new = select_k.transform(test_norm_multi)
 
 
+train_d1, train_d2, y_d1, y_d2 = train_test_split(train_new, y_train_multi, stratify=y_train_multi, test_size=0.5, random_state=42)
 
+train_indices = []
+for i in range(7):
+  temp = random.sample(range(train_d1.shape[0]), k=train_d1.shape[0])
+  train_indices.append(temp)
+  
+train_d1_k0 = np.take(train_d1, train_indices[0], axis=0)
+train_d1_k1 = np.take(train_d1, train_indices[1], axis=0)
+train_d1_k2 = np.take(train_d1, train_indices[2], axis=0)
+train_d1_k3 = np.take(train_d1, train_indices[3], axis=0)
+train_d1_k4 = np.take(train_d1, train_indices[4], axis=0)
+train_d1_k5 = np.take(train_d1, train_indices[5], axis=0)
+train_d1_k6 = np.take(train_d1, train_indices[6], axis=0)
 
+y_d1_k0 = np.take(y_d1, train_indices[0], axis=0)
+y_d1_k1 = np.take(y_d1, train_indices[1], axis=0)
+y_d1_k2 = np.take(y_d1, train_indices[2], axis=0)
+y_d1_k3 = np.take(y_d1, train_indices[3], axis=0)
+y_d1_k4 = np.take(y_d1, train_indices[4], axis=0)
+y_d1_k5 = np.take(y_d1, train_indices[5], axis=0)
+y_d1_k6 = np.take(y_d1, train_indices[6], axis=0)
+"""
+st.code(code_11, 'python')
+st.write('\n')
 
