@@ -1634,7 +1634,7 @@ def get_word_dict(unigram_feat_multi):
 
 word_ind_multi = get_word_dict(unigram_feat_multi)
 """
-
+st.code(code_8, 'python')
 st.write('\n')
 
 st.header("Converting Text-to-Sequences")
@@ -1685,7 +1685,7 @@ def text_to_seq(vocab, data):
 
 
 """
-
+st.code(code_9, 'python')
 st.write('\n')
 
 st.header("Getting everything at one place")
@@ -1706,3 +1706,9 @@ cv_multi = np.hstack((cv_array_multi, cv_tf.toarray(), cv_cols_multi))
 test_multi = np.hstack((test_array_multi, test_tf.toarray(), test_cols_multi))
 
 """
+st.code(code_10, 'python')
+
+
+
+
+
