@@ -1762,3 +1762,62 @@ y_d1_k6 = np.take(y_d1, train_indices[6], axis=0)
 st.code(code_11, 'python')
 st.write('\n')
 
+st.write('insert flowchart here')
+
+
+st.subheader(" Training different Models with each of the classes ")
+st.markdown("It is understood that each dataset that we have now will have 7 sentiments. So training each model for each of those classes and then doing the same for all datasets is very cumbersome. What we chose to do instead is from each dataset we will choose only majority class i.e. Class which has higher number of variables.")
+st.markdown(" We will create stacking classifier for each of the 7 sentiments and then predict for each sentiment using these stacking classifier. ")
+st.markdown("Each of our stacking classifier will contain a Decision Tree, Stochastic GRadient Descent, Logistic Regression, Naive Bayes and Logistic Regression as the Meta-Classifier")
+
+code_12 = """
+dtc = DecisionTreeClassifier()
+
+random_grid = {'splitter': ['best', 'random'],
+               'max_features': ['auto', 'sqrt'],
+               'min_samples_leaf': [1, 2, 4],
+               'min_samples_split': [2, 5, 10],
+               'criterion': ['gini', 'entropy']}
+
+dtc_random = RandomizedSearchCV(estimator = dtc, param_distributions = random_grid, scoring='roc_auc',
+                               n_iter = 50, cv = 3,refit=True, verbose=3, random_state=42, n_jobs = -1)
+                               
+                               
+### OUTPUT
+Fitting 3 folds for each of 50 candidates, totalling 150 fits
+[Parallel(n_jobs=-1)]: Using backend LokyBackend with 4 concurrent workers.
+[Parallel(n_jobs=-1)]: Done  24 tasks      | elapsed:    1.6s
+[Parallel(n_jobs=-1)]: Done 143 out of 150 | elapsed:    3.7s remaining:    0.2s
+[Parallel(n_jobs=-1)]: Done 150 out of 150 | elapsed:    3.7s finished
+RandomizedSearchCV(cv=3, error_score=nan,
+                   estimator=DecisionTreeClassifier(ccp_alpha=0.0,
+                                                    class_weight=None,
+                                                    criterion='gini',
+                                                    max_depth=None,
+                                                    max_features=None,
+                                                    max_leaf_nodes=None,
+                                                    min_impurity_decrease=0.0,
+                                                    min_impurity_split=None,
+                                                    min_samples_leaf=1,
+                                                    min_samples_split=2,
+                                                    min_weight_fraction_leaf=0.0,
+                                                    presort='deprecated',
+                                                    random_state=None,
+                                                    splitter='best'),
+                   iid='deprecated', n_iter=50, n_jobs=-1,
+                   param_distributions={'criterion': ['gini', 'entropy'],
+                                        'max_features': ['auto', 'sqrt'],
+                                        'min_samples_leaf': [1, 2, 4],
+                                        'min_samples_split': [2, 5, 10],
+                                        'splitter': ['best', 'random']},
+                   pre_dispatch='2*n_jobs', random_state=42, refit=True,
+                   return_train_score=False, scoring='roc_auc', verbose=3)
+"""
+
+st.code(code_12, 'python')
+
+
+
+
+
+
