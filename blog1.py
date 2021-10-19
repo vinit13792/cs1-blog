@@ -1474,10 +1474,10 @@ def get_pos_vec(df, feature):
 
   return pos_cat
 
-train_pos_cat_multi = get_pos_vec(X_train_multi, 'Text')
-X_train_multi['CI'] = train_pos_cat_multi.get('CI')
-X_train_multi['GFI'] = train_pos_cat_multi.get('GFI')
-X_train_multi['EI'] = train_pos_cat_multi.get('EI')
+#train_pos_cat_multi = get_pos_vec(X_train_multi, 'Text')
+#X_train_multi['CI'] = train_pos_cat_multi.get('CI')
+#X_train_multi['GFI'] = train_pos_cat_multi.get('GFI')
+#X_train_multi['EI'] = train_pos_cat_multi.get('EI')
 
 code_7 = """ import nltk
 from nltk.corpus import stopwords
@@ -1812,12 +1812,82 @@ RandomizedSearchCV(cv=3, error_score=nan,
                                         'splitter': ['best', 'random']},
                    pre_dispatch='2*n_jobs', random_state=42, refit=True,
                    return_train_score=False, scoring='roc_auc', verbose=3)
+                   
+                   
+                   
+print(dtc_random.best_params_)
+
+### Output
+{'criterion': 'entropy',
+ 'max_features': 'sqrt',
+ 'min_samples_leaf': 2,
+ 'min_samples_split': 10,
+ 'splitter': 'best'}
+
+
+# Ref: https://scikit-learn.org/stable/auto_examples/tree/plot_cost_complexity_pruning.html#sphx-glr-auto-examples-tree-plot-cost-complexity-pruning-py
+dtc_ = DecisionTreeClassifier(**dtc_random.best_params_)
+path =dtc_.cost_complexity_pruning_path(train_d1_k0, y_d1_k0[cols[0]])
+ccp_alphas, impurities = path.ccp_alphas, path.impurities
+fig, ax = plt.subplots()
+ax.plot(ccp_alphas[:-1], impurities[:-1], marker='o', drawstyle="steps-post")
+ax.set_xlabel("effective alpha")
+ax.set_ylabel("total impurity of leaves")
+ax.set_title("Total Impurity vs effective alpha for training set")
+
 """
 
 st.code(code_12, 'python')
+st.image('/app/cs1-blog/cap pruning.png')
+
+code_13 = """
+clfs = []
+for ccp_alpha in ccp_alphas:
+    clf = DecisionTreeClassifier(**dtc_random.best_params_, ccp_alpha=ccp_alpha)
+    clf.fit(train_d1_k0, y_d1_k0[cols[0]])
+    clfs.append(clf)
+print("Number of nodes in the last tree is: {} with ccp_alpha: {}".format(
+      clfs[-1].tree_.node_count, ccp_alphas[-1]))
+
+# Ref: https://scikit-learn.org/stable/auto_examples/tree/plot_cost_complexity_pruning.html#sphx-glr-auto-examples-tree-plot-cost-complexity-pruning-py
+clfs = clfs[:-1]
+ccp_alphas = ccp_alphas[:-1]
+
+node_counts = [clf.tree_.node_count for clf in clfs]
+depth = [clf.tree_.max_depth for clf in clfs]
+fig, ax = plt.subplots(2, 1)
+ax[0].plot(ccp_alphas, node_counts, marker='o', drawstyle="steps-post")
+ax[0].set_xlabel("alpha")
+ax[0].set_ylabel("number of nodes")
+ax[0].set_title("Number of nodes vs alpha")
+ax[1].plot(ccp_alphas, depth, marker='o', drawstyle="steps-post")
+ax[1].set_xlabel("alpha")
+ax[1].set_ylabel("depth of tree")
+ax[1].set_title("Depth vs alpha")
+fig.tight_layout()
 
 
+"""
 
+st.code(code_13, 'python')
+st.image('/app/cs1-blog/alpha pruning.png')
+
+code_14 = """
+# Ref: https://scikit-learn.org/stable/auto_examples/tree/plot_cost_complexity_pruning.html#sphx-glr-auto-examples-tree-plot-cost-complexity-pruning-py
+train_scores = [clf.score(train_d1_k0, y_d1_k0[cols[0]]) for clf in clfs]
+
+fig, ax = plt.subplots()
+ax.set_xlabel("alpha")
+ax.set_ylabel("accuracy")
+ax.set_title("Accuracy vs alpha for training sets")
+ax.plot(ccp_alphas, train_scores, marker='o', label="train d1 k0",
+        drawstyle="steps-post")
+ax.legend()
+plt.show()
+
+"""
+st.code(code_14, 'python')
+st.image('/app/cs1-blog/acc pruning.png')
 
 
 
