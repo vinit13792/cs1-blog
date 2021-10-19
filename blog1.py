@@ -1156,6 +1156,8 @@ st.code(code_4, 'python')
 X_train_multi['Negation'] = check_negation(X_train_multi)
 
 st.header("Getting unigrams from Synonyms, Hyponyms, WordNet")
+st.image('/app/cs1-blog/sentiment cloud.jpg')
+st.write('explain more about sentiment cloud')
 st.markdown("We get unigrams when we get each word as feature and create a one hot encoded vector. Then we get synonyms of these unigrams this is Depth level 1 of synonyms. When we find synonyms of these Depth level 1, we get Depth level 2 words, these are called hyponyms. We get these synonyms of various depths using wordnet.")
 
 import nltk
@@ -1402,82 +1404,6 @@ gdd.download_file_from_google_drive(file_id='1zhqF3YfALiRN5Dkm-xkfMFTLPw2d7cts',
                                     unzip=False)
 
 st.image('pattern feat.png')
-
-import nltk
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize, sent_tokenize
-
-def get_pos_vec(df, feature):
-  ci = ['CC', 'DT', 'EX', 'IN', 'MD', 'PDT', 'POS', 'RB', 'RBR', 'RBS', 'RP', 'TO', 'WDT', 'WP', 'WP$', 'WRB']
-  gfi = ['CD', 'FW', 'LS', 'NNP', 'NNPS', 'PRP', 'PRP$', 'SYM', 'UH']
-  ei = ['JJ', 'JJR','JJS','NN','NNS','VB','VBD','VBD','VBG','VBN','VBP','VBZ']
-  pos_cat = defaultdict(list)
-  
-  for i in range(df.shape[0]):
-
-    doc = df[feature].values[i]
-    pattern =[]
-    tokenized = sent_tokenize(doc)
-    for i in tokenized:
-
-      # Word tokenizers is used to find the words 
-      # and punctuation in a string
-      wordsList = nltk.word_tokenize(i)
-  
-      # removing stop words from wordList
-      wordsList = [w for w in wordsList if not w in stop_words] 
-  
-      #  Using a Tagger. Which is part-of-speech 
-      # tagger or POS-tagger. 
-      tagged = nltk.pos_tag(wordsList)
-
-      for tag in tagged:
-        pattern.append(tag[1]) 
-    
-    
-    pat_check_ci = [pat for pat in pattern if pat in ci]
-    pat_check_ei = [pat for pat in pattern if pat in ei]
-    pat_check_gfi = [pat for pat in pattern if pat in gfi]
-    #print('-----')
-    #print(pat_check_ci, 'ci')
-    #print(pat_check_gfi, 'gfi')
-    #print(pat_check_ei, 'ei')
-    
-    if (len(pat_check_ci)!=0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)!=0):
-      pos_cat['CI'].append(1)
-      pos_cat['EI'].append(1)
-      pos_cat['GFI'].append(1)
-    elif (len(pat_check_ci)==0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)!=0):
-      pos_cat['CI'].append(0)
-      pos_cat['EI'].append(1)
-      pos_cat['GFI'].append(1)
-    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)!=0):
-      pos_cat['CI'].append(1)
-      pos_cat['EI'].append(0)
-      pos_cat['GFI'].append(1)
-    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)!=0) and (len(pat_check_gfi)==0):
-      pos_cat['CI'].append(1)
-      pos_cat['EI'].append(1)
-      pos_cat['GFI'].append(0)
-    elif (len(pat_check_ci)!=0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)==0):
-      pos_cat['CI'].append(1)
-      pos_cat['EI'].append(0)
-      pos_cat['GFI'].append(0)
-    elif (len(pat_check_ci)==0) and (len(pat_check_ei)==0) and (len(pat_check_gfi)!=0):
-      pos_cat['CI'].append(0)
-      pos_cat['EI'].append(0)
-      pos_cat['GFI'].append(1)
-    else:
-      pos_cat['CI'].append(0)
-      pos_cat['EI'].append(1)
-      pos_cat['GFI'].append(0)
-
-  return pos_cat
-
-#train_pos_cat_multi = get_pos_vec(X_train_multi, 'Text')
-#X_train_multi['CI'] = train_pos_cat_multi.get('CI')
-#X_train_multi['GFI'] = train_pos_cat_multi.get('GFI')
-#X_train_multi['EI'] = train_pos_cat_multi.get('EI')
 
 code_7 = """ import nltk
 from nltk.corpus import stopwords
